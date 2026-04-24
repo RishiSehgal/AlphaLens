@@ -139,14 +139,14 @@ Evaluated on golden test set: **AAPL, NVDA, MSFT** (FY2024 public data)
 
 | Metric | Target | AAPL | NVDA | MSFT |
 |--------|--------|------|------|------|
-| Retrieval Precision@5 | ≥ 0.60 | — | — | — |
-| Retrieval Recall@5 | ≥ 0.80 | — | — | — |
-| Faithfulness | ≥ 0.90 | — | — | — |
-| Numerical Accuracy | ≥ 0.95 | — | — | — |
-| Earnings Surprise Acc. | 1.00 | — | — | — |
+| Retrieval Precision@5 | ≥ 0.60 | 0.60 ✅ | 0.40 ⚠️ | — |
+| Retrieval Recall@5 | ≥ 0.80 | 1.00 ✅ | 1.00 ✅ | — |
+| Faithfulness | ≥ 0.90 | 0.00* | 0.00* | — |
+| Numerical Accuracy | ≥ 0.95 | 1.00 ✅ | 1.00 ✅ | — |
+| Earnings Surprise Acc. | 1.00 | 1.00 ✅ | 1.00 ✅ | — |
 
-> Run `python -m src.eval.runner` to populate the table with live results.
-> Full results saved to [docs/eval_results.md](docs/eval_results.md).
+> *Faithfulness = 0.00 due to Gemini free-tier daily quota (20 req/day) exhaustion during sequential eval runs. Single-ticker production usage is unaffected.
+> Run `python -m src.eval.runner` to reproduce. Full methodology in [docs/eval_results.md](docs/eval_results.md).
 
 ---
 

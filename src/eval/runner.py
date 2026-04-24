@@ -21,7 +21,7 @@ from src.graph import run_pipeline
 
 logger = logging.getLogger(__name__)
 
-DOCS_DIR = Path(__file__).resolve().parents[3] / "docs"
+DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
 EVAL_RESULTS_PATH = DOCS_DIR / "eval_results.md"
 
 # Target thresholds from CLAUDE.md
