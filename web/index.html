@@ -3,54 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AlphaLens — AI Equity Research</title>
-  <meta name="description" content="AlphaLens: 6 AI agents replace an entire equity research team. 90-second deep-dive reports on any stock. Built with LangGraph + Gemini + RAG." />
+  <title>AlphaLens — AI Equity Research in 90 Seconds</title>
+  <meta name="description" content="AlphaLens: 6 AI agents replace an entire equity research team. 90-second deep-dive reports on any stock. Built with LangGraph + Gemini 2.5 Flash + RAG." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ── Reset & Base ───────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-primary:   #0A0A0F;
-      --bg-card:      #12121A;
-      --bg-elevated:  #1A1A25;
-      --accent:       #3B82F6;
-      --purple:       #8B5CF6;
-      --green:        #10B981;
-      --amber:        #F59E0B;
-      --red:          #EF4444;
-      --text-primary: #F1F5F9;
-      --text-sec:     #94A3B8;
-      --text-muted:   #64748B;
-      --border:       #1E293B;
+      --bg:       #0A0A0F;
+      --bg-card:  #12121A;
+      --bg-up:    #1A1A25;
+      --bg-input: #1E1E2A;
+      --accent:   #3B82F6;
+      --purple:   #8B5CF6;
+      --green:    #10B981;
+      --amber:    #F59E0B;
+      --red:      #EF4444;
+      --t1:       #F1F5F9;
+      --t2:       #94A3B8;
+      --t3:       #64748B;
+      --border:   #1E293B;
+      --bh:       #334155;
     }
 
     html { scroll-behavior: smooth; }
-
     body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--t1);
+      font-family: 'Inter', -apple-system, sans-serif;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
-
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
-
-    /* ── Layout helpers ─────────────────────────────────────────── */
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
-    .section { padding: 5rem 0; }
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85em;
+      background: var(--bg-up);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--t2);
     }
-    .section-subtitle {
+
+    /* ── Layout ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 5rem 0; }
+    .section + .section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      color: var(--t1);
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .section-sub {
       font-size: 1rem;
-      color: var(--text-sec);
+      color: var(--t2);
+      max-width: 600px;
       margin-bottom: 3rem;
     }
+
     .gradient-text {
       background: linear-gradient(135deg, var(--accent), var(--purple));
       -webkit-background-clip: text;
@@ -58,61 +80,44 @@
       background-clip: text;
     }
 
-    /* ── Nav ────────────────────────────────────────────────────── */
+    /* ── Nav ── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(10, 10, 15, 0.92);
-      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,10,15,0.88);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
-      padding: 0.9rem 0;
+      padding: 0.85rem 0;
     }
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .nav-logo { font-size: 1.2rem; font-weight: 800; color: var(--t1); letter-spacing: -0.3px; }
     .nav-logo span { color: var(--accent); }
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
-    }
-    .nav-links a {
-      font-size: 0.875rem;
-      color: var(--text-sec);
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+    .nav-links { display: flex; gap: 1.4rem; list-style: none; }
+    .nav-links a { font-size: 0.85rem; color: var(--t2); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--t1); text-decoration: none; }
+    .nav-actions { display: flex; gap: 0.6rem; }
+
+    /* ── Buttons ── */
     .btn {
-      display: inline-block;
-      padding: 0.55rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      transition: opacity 0.2s, transform 0.1s;
-      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1.1rem; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600;
+      transition: opacity 0.2s, transform 0.15s;
+      cursor: pointer; white-space: nowrap;
     }
+    .btn:hover { text-decoration: none; }
     .btn-primary {
       background: linear-gradient(135deg, var(--accent), var(--purple));
-      color: white;
-      border: none;
+      color: #fff; border: none;
     }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); text-decoration: none; }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
     .btn-outline {
+      background: transparent; color: var(--t2);
       border: 1px solid var(--border);
-      color: var(--text-sec);
-      background: transparent;
     }
-    .btn-outline:hover { border-color: var(--text-sec); text-decoration: none; }
+    .btn-outline:hover { border-color: var(--bh); color: var(--t1); }
+    .btn-lg { padding: 0.75rem 1.6rem; font-size: 0.95rem; border-radius: 10px; }
 
-    /* ── Hero ───────────────────────────────────────────────────── */
+    /* ── Hero ── */
     .hero {
       padding: 7rem 0 5rem;
       text-align: center;
@@ -121,525 +126,651 @@
     }
     .hero::before {
       content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.12), transparent);
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 90% 55% at 50% -5%, rgba(59,130,246,0.13), transparent);
       pointer-events: none;
     }
     .hero-badge {
-      display: inline-block;
-      background: rgba(59,130,246,0.12);
-      border: 1px solid rgba(59,130,246,0.3);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
       color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      padding: 0.3rem 0.9rem;
-      border-radius: 20px;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.3rem 1rem; border-radius: 20px;
+      margin-bottom: 1.75rem;
     }
     .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -2px; margin-bottom: 1.5rem;
     }
     .hero-sub {
-      font-size: 1.15rem;
-      color: var(--text-sec);
-      max-width: 580px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.7;
+      font-size: 1.15rem; color: var(--t2);
+      max-width: 560px; margin: 0 auto 2.5rem;
+      line-height: 1.75;
     }
-    .hero-cta {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .hero-cta { display: flex; gap: 0.9rem; justify-content: center; flex-wrap: wrap; }
     .hero-stats {
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      margin-top: 4rem;
-      flex-wrap: wrap;
+      display: flex; justify-content: center; gap: 3.5rem;
+      margin-top: 4.5rem; flex-wrap: wrap;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
     }
-    .hero-stat { text-align: center; }
-    .hero-stat-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1;
+    .stat-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.75rem; color: var(--t3); margin-top: 0.35rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    /* ── Video demo ── */
+    .video-wrapper {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      max-width: 860px;
+      margin: 0 auto;
     }
-    .hero-stat-label {
+    .video-wrapper iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+    }
+    .video-caption {
+      padding: 0.75rem 1rem;
       font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: var(--t3);
+      text-align: center;
+      border-top: 1px solid var(--border);
     }
 
-    /* ── Agent Cards ─────────────────────────────────────────────── */
-    .agents-grid {
+    /* ── Feature cards ── */
+    .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
     }
-    .agent-card {
+    .feature-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
       transition: border-color 0.2s, transform 0.2s;
     }
-    .agent-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
+    .feature-card:hover { border-color: var(--bh); transform: translateY(-2px); }
+    .feature-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
     }
-    .agent-number {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
-    }
-    .agent-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
-    }
-    .agent-role {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
-    .agent-desc {
-      font-size: 0.875rem;
-      color: var(--text-sec);
-      line-height: 1.6;
-    }
+    .feature-title { font-size: 0.95rem; font-weight: 700; color: var(--t1); margin-bottom: 0.4rem; }
+    .feature-desc { font-size: 0.85rem; color: var(--t2); line-height: 1.65; }
 
-    /* ── Architecture ────────────────────────────────────────────── */
-    .flow-container {
+    /* ── Agents ── */
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1rem;
+    }
+    .agent-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 2rem;
+      padding: 1.4rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .agent-card:hover { border-color: var(--bh); transform: translateY(-2px); }
+    .agent-num {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .agent-name { font-size: 1rem; font-weight: 700; color: var(--t1); margin-bottom: 0.2rem; }
+    .agent-role { font-size: 0.78rem; color: var(--t3); margin-bottom: 0.75rem; }
+    .agent-desc { font-size: 0.85rem; color: var(--t2); line-height: 1.65; }
+
+    /* ── Pipeline flow ── */
+    .flow-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 2rem 1.5rem;
       overflow-x: auto;
     }
     .flow {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      min-width: 720px;
-      justify-content: center;
-      flex-wrap: nowrap;
+      display: flex; align-items: center; gap: 0.5rem;
+      min-width: 700px; justify-content: center;
     }
-    .flow-node {
-      background: var(--bg-elevated);
+    .fn {
+      background: var(--bg-up);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.6rem 1rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      text-align: center;
+      padding: 0.55rem 1rem;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--t1); white-space: nowrap; text-align: center;
     }
-    .flow-node.accent { border-color: var(--accent); color: var(--accent); }
-    .flow-node.purple { border-color: var(--purple); color: var(--purple); }
-    .flow-node.green  { border-color: var(--green);  color: var(--green); }
-    .flow-arrow { color: var(--text-muted); font-size: 1.1rem; }
-    .flow-branch {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    .flow-branch-label {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+    .fn.blue   { border-color: rgba(59,130,246,0.5);  color: var(--accent); }
+    .fn.purple { border-color: rgba(139,92,246,0.5);  color: var(--purple); }
+    .fn.green  { border-color: rgba(16,185,129,0.5);  color: var(--green); }
+    .fa { color: var(--t3); font-size: 1rem; flex-shrink: 0; }
+    .fbranch { display: flex; flex-direction: column; gap: 0.45rem; align-items: center; }
+    .fbranch-label { font-size: 0.6rem; color: var(--t3); text-transform: uppercase; letter-spacing: 0.05em; }
+    .flow-note { font-size: 0.8rem; color: var(--t3); margin-top: 1.25rem; }
 
-    /* ── Tech Stack badges ───────────────────────────────────────── */
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1rem;
+    /* ── Tech Stack ── */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .tech-group-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--t3); margin-bottom: 0.75rem;
     }
+    .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .badge {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 0.35rem 0.85rem;
-      font-size: 0.8rem;
-      color: var(--text-sec);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      background: var(--bg-up); border: 1px solid var(--border);
+      border-radius: 20px; padding: 0.3rem 0.8rem;
+      font-size: 0.78rem; color: var(--t2);
+      display: flex; align-items: center; gap: 0.4rem;
     }
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
-    }
-    .badge-dot.green  { background: var(--green); }
-    .badge-dot.amber  { background: var(--amber); }
-    .badge-dot.purple { background: var(--purple); }
+    .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .dot-blue   { background: var(--accent); }
+    .dot-green  { background: var(--green); }
+    .dot-amber  { background: var(--amber); }
+    .dot-purple { background: var(--purple); }
 
-    /* ── Metrics table ───────────────────────────────────────────── */
+    /* ── Metrics ── */
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 1rem;
     }
     .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem;
+      padding: 1.4rem 1rem;
       text-align: center;
     }
-    .metric-value {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-    .metric-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .metric-target {
-      font-size: 0.75rem;
-      color: var(--green);
-      margin-top: 0.4rem;
-    }
+    .metric-val { font-size: 2rem; font-weight: 800; }
+    .metric-name { font-size: 0.72rem; color: var(--t3); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .metric-desc { font-size: 0.75rem; color: var(--t2); margin-top: 0.4rem; line-height: 1.4; }
 
-    /* ── Code block ─────────────────────────────────────────────── */
-    .code-block {
-      background: var(--bg-elevated);
+    /* ── Docs section ── */
+    .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .doc-card {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem 1.5rem;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
-      color: var(--text-sec);
-      overflow-x: auto;
-      line-height: 1.8;
+      border-radius: 12px;
+      padding: 1.4rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .code-block .cmd { color: var(--accent); }
-    .code-block .comment { color: var(--text-muted); }
+    .doc-card:hover { border-color: var(--accent); transform: translateY(-2px); text-decoration: none; }
+    .doc-card-icon { font-size: 1.4rem; }
+    .doc-card-title { font-size: 0.95rem; font-weight: 700; color: var(--t1); }
+    .doc-card-desc  { font-size: 0.82rem; color: var(--t2); line-height: 1.55; flex: 1; }
+    .doc-card-link  { font-size: 0.78rem; color: var(--accent); font-weight: 600; margin-top: 0.25rem; }
 
-    /* ── Disclaimer ──────────────────────────────────────────────── */
+    /* ── Setup ── */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.4rem 1.6rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.83rem;
+      color: var(--t2);
+      line-height: 1.9;
+      overflow-x: auto;
+    }
+    .code-block .cmd     { color: #79c0ff; }
+    .code-block .comment { color: var(--t3); }
+    .code-block .val     { color: #a5d6ff; }
     .disclaimer {
+      margin-top: 1rem;
       background: rgba(239,68,68,0.06);
       border: 1px solid rgba(239,68,68,0.18);
       border-radius: 8px;
-      padding: 1rem 1.25rem;
-      font-size: 0.8rem;
-      color: var(--text-sec);
-      margin-top: 1rem;
+      padding: 0.9rem 1.1rem;
+      font-size: 0.8rem; color: var(--t2);
     }
 
-    /* ── Footer ──────────────────────────────────────────────────── */
+    /* ── Footer ── */
     footer {
       border-top: 1px solid var(--border);
       padding: 2.5rem 0;
       text-align: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.82rem; color: var(--t3);
     }
-    footer a { color: var(--text-muted); }
-    footer a:hover { color: var(--text-primary); }
+    .footer-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin: 0.75rem 0; }
+    .footer-links a { color: var(--t3); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--t1); text-decoration: none; }
 
-    /* ── Divider ─────────────────────────────────────────────────── */
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-    }
-
-    /* ── Responsive ─────────────────────────────────────────────── */
+    /* ── Responsive ── */
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .hero { padding: 4rem 0 3rem; }
-      .hero-stats { gap: 1.5rem; }
+      .hero-stats { gap: 2rem; }
       .flow { min-width: 0; flex-direction: column; }
-      .flow-arrow { transform: rotate(90deg); }
+      .fa { transform: rotate(90deg); }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<!-- ══ NAV ══════════════════════════════════════════════════════════════════ -->
 <nav>
   <div class="container nav-inner">
     <div class="nav-logo">Alpha<span>Lens</span></div>
     <ul class="nav-links">
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#features">Features</a></li>
       <li><a href="#agents">Agents</a></li>
       <li><a href="#architecture">Architecture</a></li>
-      <li><a href="#tech">Tech Stack</a></li>
+      <li><a href="#docs">Docs</a></li>
       <li><a href="#setup">Setup</a></li>
-      <li><a href="#metrics">Eval</a></li>
     </ul>
-    <div style="display:flex;gap:0.6rem;">
-      <a href="https://github.com" class="btn btn-outline" target="_blank">GitHub</a>
-      <a href="#" class="btn btn-primary" target="_blank">Live Demo →</a>
+    <div class="nav-actions">
+      <a href="https://github.com/RishiSehgal/AlphaLens" target="_blank" class="btn btn-outline">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957" target="_blank" class="btn btn-primary">
+        ▶ Watch Demo
+      </a>
     </div>
   </div>
 </nav>
 
-<!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+<!-- ══ HERO ═════════════════════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="container">
-    <div class="hero-badge">Northeastern MS AI Capstone · 2026</div>
+    <div class="hero-badge">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+      Northeastern MS Generative AI Capstone · 2026
+    </div>
     <h1>
       One Engineer.<br>
       <span class="gradient-text">Six AI Agents.</span><br>
-      Zero Cost.
+      90 Seconds.
     </h1>
     <p class="hero-sub">
       AlphaLens compresses 8+ hours of professional equity research into 90 seconds.
-      Six LangGraph agents replace an entire research team — from junior analyst to
-      publishing editor.
+      A LangGraph state machine replaces an entire research team — from junior analyst to publishing editor —
+      at zero cost.
     </p>
     <div class="hero-cta">
-      <a href="#" class="btn btn-primary" target="_blank">Open Live App →</a>
-      <a href="https://github.com" class="btn btn-outline" target="_blank">View on GitHub</a>
+      <a href="#demo" class="btn btn-primary btn-lg">▶ Watch the Demo</a>
+      <a href="https://github.com/RishiSehgal/AlphaLens" target="_blank" class="btn btn-outline btn-lg">View Source on GitHub</a>
     </div>
-
     <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-value gradient-text">6</div>
-        <div class="hero-stat-label">AI Agents</div>
+      <div>
+        <div class="stat-value gradient-text">6</div>
+        <div class="stat-label">AI Agents</div>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value gradient-text">90s</div>
-        <div class="hero-stat-label">Analysis Time</div>
+      <div>
+        <div class="stat-value gradient-text">90s</div>
+        <div class="stat-label">Per Analysis</div>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value gradient-text">$0</div>
-        <div class="hero-stat-label">API Cost</div>
+      <div>
+        <div class="stat-value gradient-text">$0</div>
+        <div class="stat-label">API Cost</div>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-value gradient-text">4</div>
-        <div class="hero-stat-label">Free Data Sources</div>
+      <div>
+        <div class="stat-value gradient-text">70</div>
+        <div class="stat-label">Tests Passing</div>
+      </div>
+      <div>
+        <div class="stat-value gradient-text">4</div>
+        <div class="stat-label">Data Sources</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Agents ───────────────────────────────────────────────────────────────── -->
+<!-- ══ VIDEO DEMO ════════════════════════════════════════════════════════════ -->
+<section class="section" id="demo">
+  <div class="container">
+    <div class="section-label">Live Demo</div>
+    <div class="section-title">See It In Action</div>
+    <p class="section-sub">
+      Full 10-minute walkthrough — live pipeline run on AAPL, technical architecture deep-dive,
+      prompt engineering strategies, and evaluation results.
+    </p>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.loom.com/embed/36213fda55af4fd2829f19d726ef1957"
+        allowfullscreen
+        allow="autoplay; fullscreen"
+        title="AlphaLens Demo"
+      ></iframe>
+      <div class="video-caption">
+        10-minute demo · Live pipeline run · Technical architecture · Evaluation results ·
+        <a href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957" target="_blank">Open in Loom ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-label">Key Features</div>
+    <div class="section-title">What Makes AlphaLens Different</div>
+    <p class="section-sub">Not a chatbot. Not a dashboard. A full AI research pipeline grounded in primary source documents.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.12);">📄</div>
+        <div class="feature-title">RAG over Real SEC Filings</div>
+        <div class="feature-desc">Downloads actual 10-K/10-Q filings from EDGAR, parses sections, embeds with Gemini (3072-dim), and retrieves relevant passages via ChromaDB. Every narrative claim is cited to a specific section and page.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.12);">🔍</div>
+        <div class="feature-title">Verification Agent</div>
+        <div class="feature-desc">Cross-references management's narrative claims against actual financial data. Flags divergences with evidence — e.g., when revenue guidance language doesn't match the numbers. No other free tool does this.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.12);">⚡</div>
+        <div class="feature-title">Parallel Execution</div>
+        <div class="feature-desc">RAG Citation and Quant Analysis run simultaneously via LangGraph fan-out. A synchronization barrier waits for both before Verification begins. This is what keeps the total under 90 seconds.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.12);">🛡️</div>
+        <div class="feature-title">Structured Prompt Engineering</div>
+        <div class="feature-desc">Each agent uses a purpose-built prompt strategy: structured JSON output, iterative section prompting, grounded evidence prompting, or two-stage LLM classification. Multi-layer JSON recovery handles truncated outputs.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(239,68,68,0.12);">📊</div>
+        <div class="feature-title">Quant Models + Live Charts</div>
+        <div class="feature-desc">3-stage DCF (bear/base/bull), RSI(14), MACD(12/26/9), earnings surprise vs consensus — all computed from real market data and rendered as interactive Plotly charts with a custom dark theme.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(59,130,246,0.12);">💬</div>
+        <div class="feature-title">Grounded Follow-up Chat</div>
+        <div class="feature-desc">Ask questions after the report is generated. Every answer is grounded in the pipeline's outputs — financial metrics, report sections, RAG chunks, and verification divergences — not the model's training data.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ AGENTS ════════════════════════════════════════════════════════════════ -->
 <section class="section" id="agents">
   <div class="container">
-    <div class="section-title">The Research Team — Replaced</div>
-    <div class="section-subtitle">Each agent maps to a real role on a traditional equity research desk.</div>
+    <div class="section-label">The Pipeline</div>
+    <div class="section-title">Six Agents. One Research Team.</div>
+    <p class="section-sub">Each agent has a narrow, well-defined role — exactly how a real equity research desk operates.</p>
 
     <div class="agents-grid">
       <div class="agent-card">
-        <div class="agent-number">Agent 01</div>
+        <div class="agent-num">Agent 01</div>
         <div class="agent-name">Data Fusion</div>
         <div class="agent-role">Replaces: Junior Analyst</div>
-        <div class="agent-desc">Fires 3 concurrent API calls to SEC EDGAR, Alpha Vantage, and FRED. Normalizes 25+ financial fields. Falls back gracefully if any source fails.</div>
+        <div class="agent-desc">Fires concurrent API calls to SEC EDGAR, Alpha Vantage, yfinance, and FRED. Normalizes 25+ financial fields into a unified dict. Falls back gracefully — never crashes, always returns a <code>sources_status</code> dict.</div>
       </div>
       <div class="agent-card">
-        <div class="agent-number">Agent 02</div>
+        <div class="agent-num">Agent 02</div>
         <div class="agent-name">RAG Citation</div>
         <div class="agent-role">Replaces: Research Associate</div>
-        <div class="agent-desc">Downloads 10-K filings, parses sections (MD&amp;A, Risk Factors), chunks at 500 tokens, embeds via Gemini, stores in ChromaDB. Retrieves top-k relevant passages.</div>
+        <div class="agent-desc">Downloads 10-K HTML, parses named sections (MD&amp;A, Risk Factors, Financial Statements), chunks at 500 tokens with 100-token overlap via tiktoken, embeds with Gemini, stores in ChromaDB, retrieves top-k per query dimension.</div>
       </div>
       <div class="agent-card">
-        <div class="agent-number">Agent 03</div>
+        <div class="agent-num">Agent 03</div>
         <div class="agent-name">Quant Analysis</div>
         <div class="agent-role">Replaces: Quantitative Analyst</div>
-        <div class="agent-desc">3-stage DCF model (bear/base/bull), RSI(14), MACD(12/26/9), earnings surprise vs consensus. WACC derived from FRED rate + beta.</div>
+        <div class="agent-desc">3-stage DCF model (always reported at MEDIUM confidence to communicate model uncertainty), RSI(14), MACD(12/26/9) computed on 6 months of daily data, earnings surprise vs consensus EPS.</div>
       </div>
       <div class="agent-card">
-        <div class="agent-number">Agent 04</div>
+        <div class="agent-num">Agent 04</div>
         <div class="agent-name">Risk Scanner</div>
         <div class="agent-role">Replaces: Risk &amp; Compliance Officer</div>
-        <div class="agent-desc">Two-stage detection: keyword/regex pattern match across 9 risk categories, then Gemini LLM confirmation of severity. Cites specific filing passages.</div>
+        <div class="agent-desc">Two-stage: fast keyword/regex pattern match across 9 risk categories (going concern, material weakness, customer concentration, etc.), then Gemini LLM severity classification. Cites specific filing passages.</div>
       </div>
-      <div class="agent-card" style="border-color: rgba(139,92,246,0.4);">
-        <div class="agent-number" style="color: var(--purple);">Agent 05 · Crown Jewel</div>
+      <div class="agent-card" style="border-color:rgba(139,92,246,0.35);">
+        <div class="agent-num" style="color:var(--purple);">Agent 05 · Crown Jewel</div>
         <div class="agent-name">Verification</div>
         <div class="agent-role">Replaces: Senior Analyst</div>
-        <div class="agent-desc">Cross-references management's narrative claims against quantitative data. Flags divergences with evidence. Assigns confidence scores per section. Forces valuation to MEDIUM.</div>
+        <div class="agent-desc">Cross-references quantitative claims vs management narrative. Flags divergences with evidence. Assigns per-section confidence scores (HIGH/MEDIUM/LOW) that drive the overall report rating. Forces DCF to MEDIUM.</div>
       </div>
       <div class="agent-card">
-        <div class="agent-number">Agent 06</div>
+        <div class="agent-num">Agent 06</div>
         <div class="agent-name">Report Synthesis</div>
         <div class="agent-role">Replaces: Publishing Editor</div>
-        <div class="agent-desc">Assembles 5 structured sections with citations, confidence scores, and overall verdict. Generates follow-up Q&amp;A via grounded Gemini chat.</div>
+        <div class="agent-desc">Generates 5 report sections iteratively — one Gemini call per section — with inline citations and confidence badges. Overall confidence = min(section scores) adjusted by divergence count.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Architecture ─────────────────────────────────────────────────────────── -->
-<section class="section" style="padding-top:0;" id="architecture">
+<!-- ══ ARCHITECTURE ══════════════════════════════════════════════════════════ -->
+<section class="section" id="architecture">
   <div class="container">
-    <div class="section-title">LangGraph Pipeline</div>
-    <div class="section-subtitle">Parallel fan-out after Data Fusion; barrier fan-in before Verification.</div>
+    <div class="section-label">Architecture</div>
+    <div class="section-title">LangGraph State Machine</div>
+    <p class="section-sub">Parallel fan-out after Data Fusion. Synchronization barrier before Verification. One shared TypedDict flows through every node.</p>
 
-    <div class="flow-container">
+    <div class="flow-box">
       <div class="flow">
-        <div class="flow-node accent">START</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">Data Fusion</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-branch">
-          <div class="flow-branch-label">parallel</div>
-          <div class="flow-node">RAG Citation → Risk Scanner</div>
-          <div class="flow-node">Quant Analysis</div>
+        <div class="fn blue">START</div>
+        <div class="fa">→</div>
+        <div class="fn">Data Fusion</div>
+        <div class="fa">→</div>
+        <div class="fbranch">
+          <div class="fbranch-label">parallel</div>
+          <div class="fn">RAG Citation → Risk Scanner</div>
+          <div class="fn">Quant Analysis</div>
         </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node purple">Verification<br><small>fan-in</small></div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node">Report Synthesis</div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-node green">END</div>
+        <div class="fa">→</div>
+        <div class="fn purple">Verify<br><span style="font-size:0.65rem;opacity:0.7;">fan-in</span></div>
+        <div class="fa">→</div>
+        <div class="fn">Report Synthesis</div>
+        <div class="fa">→</div>
+        <div class="fn green">END</div>
+      </div>
+      <div class="flow-note">
+        <code>add_edge([risk_scanner, quant_analysis], verify)</code> — list syntax creates the barrier.
+        <code>Annotated[dict, _merge_metadata]</code> prevents parallel write conflicts on shared state.
       </div>
     </div>
 
-    <div style="margin-top:1rem;font-size:0.85rem;color:var(--text-muted);">
-      LangGraph <code>add_edge([risk_scanner, quant_analysis], verification)</code> — list syntax creates the synchronization barrier.
-      <code>Annotated</code> reducers on <code>metadata</code> and <code>error_log</code> prevent parallel write conflicts.
-    </div>
-  </div>
-</section>
-
-<!-- ── Tech Stack ───────────────────────────────────────────────────────────── -->
-<section class="section" style="padding-top:0;" id="tech">
-  <div class="container">
-    <div class="section-title">Tech Stack</div>
-    <div class="section-subtitle">100% free-tier. No proprietary data. No infrastructure cost.</div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
-      <div>
-        <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;">Orchestration &amp; AI</div>
-        <div class="badges">
-          <div class="badge"><div class="badge-dot"></div> LangGraph 0.2+</div>
-          <div class="badge"><div class="badge-dot"></div> Gemini 2.0 Flash</div>
-          <div class="badge"><div class="badge-dot purple"></div> gemini-embedding-001</div>
-          <div class="badge"><div class="badge-dot"></div> LangChain</div>
-        </div>
+    <div style="margin-top:2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--t3);margin-bottom:0.5rem;">Orchestration</div>
+        <div style="font-size:0.85rem;color:var(--t2);">LangGraph StateGraph · <code>AlphaLensState</code> TypedDict · Annotated reducers for parallel-safe state merging</div>
       </div>
-      <div>
-        <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;">Data Sources (Free)</div>
-        <div class="badges">
-          <div class="badge"><div class="badge-dot green"></div> SEC EDGAR</div>
-          <div class="badge"><div class="badge-dot green"></div> Alpha Vantage</div>
-          <div class="badge"><div class="badge-dot green"></div> FRED API</div>
-          <div class="badge"><div class="badge-dot green"></div> yfinance</div>
-        </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--t3);margin-bottom:0.5rem;">RAG Pipeline</div>
+        <div style="font-size:0.85rem;color:var(--t2);">tiktoken chunking · gemini-embedding-001 (3072-dim) · ChromaDB cosine similarity · multi-query retrieval</div>
       </div>
-      <div>
-        <div style="font-size:0.75rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.75rem;">Storage &amp; Frontend</div>
-        <div class="badges">
-          <div class="badge"><div class="badge-dot amber"></div> ChromaDB (local)</div>
-          <div class="badge"><div class="badge-dot amber"></div> Streamlit</div>
-          <div class="badge"><div class="badge-dot amber"></div> Plotly</div>
-          <div class="badge"><div class="badge-dot"></div> Python 3.11+</div>
-        </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--t3);margin-bottom:0.5rem;">Prompt Engineering</div>
+        <div style="font-size:0.85rem;color:var(--t2);">Structured JSON output · iterative section prompting · grounded evidence · multi-stage JSON recovery</div>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;">
+        <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--t3);margin-bottom:0.5rem;">Reliability</div>
+        <div style="font-size:0.85rem;color:var(--t2);">Token bucket rate limiters · 24h TTL cache · @agent_error_boundary · graceful fallback chain</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Setup ────────────────────────────────────────────────────────────────── -->
-<section class="section" style="padding-top:0;" id="setup">
+<!-- ══ TECH STACK ════════════════════════════════════════════════════════════ -->
+<section class="section" id="tech">
   <div class="container">
-    <div class="section-title">Quick Start</div>
-    <div class="section-subtitle">Running locally takes about 2 minutes.</div>
+    <div class="section-label">Tech Stack</div>
+    <div class="section-title">100% Free Tier. Zero Infrastructure Cost.</div>
+    <p class="section-sub">Every component runs locally or on free-tier APIs. No paid infrastructure required.</p>
 
-    <div class="code-block">
-      <span class="comment"># Clone and install</span><br>
-      <span class="cmd">git clone</span> https://github.com/your-username/alphalens.git<br>
-      <span class="cmd">cd</span> alphalens<br>
-      <span class="cmd">pip install</span> -r requirements.txt<br><br>
-      <span class="comment"># Add your free API keys to .env</span><br>
-      GOOGLE_API_KEY=your_key<br>
-      ALPHA_VANTAGE_API_KEY=your_key<br>
-      FRED_API_KEY=your_key<br><br>
-      <span class="comment"># Launch</span><br>
-      <span class="cmd">streamlit run</span> app.py
-    </div>
-
-    <div class="disclaimer">
-      <strong>Not Financial Advice.</strong> AlphaLens is an educational AI research tool.
-      Analysis is AI-generated and may contain errors. Do not make investment decisions based solely on this output.
+    <div class="tech-grid">
+      <div>
+        <div class="tech-group-label">Orchestration &amp; AI</div>
+        <div class="badges">
+          <div class="badge"><div class="dot dot-blue"></div>LangGraph 0.2+</div>
+          <div class="badge"><div class="dot dot-blue"></div>Gemini 2.5 Flash</div>
+          <div class="badge"><div class="dot dot-purple"></div>gemini-embedding-001</div>
+          <div class="badge"><div class="dot dot-blue"></div>LangChain</div>
+        </div>
+      </div>
+      <div>
+        <div class="tech-group-label">Free Data Sources</div>
+        <div class="badges">
+          <div class="badge"><div class="dot dot-green"></div>SEC EDGAR</div>
+          <div class="badge"><div class="dot dot-green"></div>Alpha Vantage</div>
+          <div class="badge"><div class="dot dot-green"></div>FRED API (Federal Reserve)</div>
+          <div class="badge"><div class="dot dot-green"></div>yfinance</div>
+        </div>
+      </div>
+      <div>
+        <div class="tech-group-label">Storage &amp; Frontend</div>
+        <div class="badges">
+          <div class="badge"><div class="dot dot-amber"></div>ChromaDB (local)</div>
+          <div class="badge"><div class="dot dot-amber"></div>Streamlit</div>
+          <div class="badge"><div class="dot dot-amber"></div>Plotly</div>
+          <div class="badge"><div class="dot dot-blue"></div>Python 3.11+</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ── Evaluation ───────────────────────────────────────────────────────────── -->
-<section class="section" style="padding-top:0;" id="metrics">
+<!-- ══ EVALUATION ════════════════════════════════════════════════════════════ -->
+<section class="section" id="metrics">
   <div class="container">
-    <div class="section-title">Evaluation Metrics</div>
-    <div class="section-subtitle">Tested on golden set: AAPL, NVDA, MSFT (FY2024 public filings).</div>
+    <div class="section-label">Evaluation</div>
+    <div class="section-title">Five Metrics. Golden Test Set.</div>
+    <p class="section-sub">Tested against AAPL, NVDA, and MSFT FY2024 public filings. Run <code>python -m src.eval.runner</code> locally to reproduce.</p>
 
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="metric-value gradient-text">≥ 0.60</div>
-        <div class="metric-label">Retrieval Precision@5</div>
-        <div class="metric-target">Fraction of top-5 chunks relevant</div>
+        <div class="metric-val gradient-text">≥0.60</div>
+        <div class="metric-name">Precision@5</div>
+        <div class="metric-desc">Fraction of top-5 retrieved chunks containing relevant keywords</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value gradient-text">≥ 0.80</div>
-        <div class="metric-label">Retrieval Recall@5</div>
-        <div class="metric-target">Sections covered in top-5</div>
+        <div class="metric-val gradient-text">≥0.80</div>
+        <div class="metric-name">Recall@5</div>
+        <div class="metric-desc">Fraction of required sections (MD&amp;A, Risk Factors) covered</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value gradient-text">≥ 0.90</div>
-        <div class="metric-label">Faithfulness</div>
-        <div class="metric-target">Claims grounded in RAG chunks</div>
+        <div class="metric-val gradient-text">≥0.90</div>
+        <div class="metric-name">Faithfulness</div>
+        <div class="metric-desc">Monetary claims in report grounded in retrieved filing chunks</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value gradient-text">≥ 0.95</div>
-        <div class="metric-label">Numerical Accuracy</div>
-        <div class="metric-target">Figures within 15% of ground truth</div>
+        <div class="metric-val gradient-text">±15%</div>
+        <div class="metric-name">Numerical Accuracy</div>
+        <div class="metric-desc">Revenue, EPS, margins within tolerance vs ground truth</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value gradient-text">1.00</div>
-        <div class="metric-label">Earnings Accuracy</div>
-        <div class="metric-target">Beat/miss direction correct</div>
+        <div class="metric-val gradient-text">1.00</div>
+        <div class="metric-name">Earnings Direction</div>
+        <div class="metric-desc">Beat / miss direction always correct (binary check)</div>
       </div>
     </div>
-
-    <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--text-muted);">
-      Run <code>python -m src.eval.runner</code> locally to populate with live results.
-    </p>
   </div>
 </section>
 
-<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<!-- ══ DOCUMENTATION ═════════════════════════════════════════════════════════ -->
+<section class="section" id="docs">
+  <div class="container">
+    <div class="section-label">Documentation</div>
+    <div class="section-title">Everything You Need</div>
+    <p class="section-sub">Full technical documentation, architecture details, evaluation results, and setup instructions.</p>
+
+    <div class="docs-grid">
+      <a class="doc-card" href="documentation.html" target="_blank">
+        <div class="doc-card-icon">📋</div>
+        <div class="doc-card-title">Project Documentation</div>
+        <div class="doc-card-desc">15-section technical report covering system architecture, prompt engineering strategies, RAG pipeline design, performance metrics, challenges and solutions, and ethical considerations.</div>
+        <div class="doc-card-link">Open Documentation ↗</div>
+      </a>
+      <a class="doc-card" href="https://github.com/RishiSehgal/AlphaLens" target="_blank">
+        <div class="doc-card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </div>
+        <div class="doc-card-title">GitHub Repository</div>
+        <div class="doc-card-desc">Complete source code — 6 agents, RAG pipeline, LangGraph orchestrator, Streamlit frontend, evaluation framework, 70 pytest tests, and example outputs.</div>
+        <div class="doc-card-link">RishiSehgal/AlphaLens ↗</div>
+      </a>
+      <a class="doc-card" href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957" target="_blank">
+        <div class="doc-card-icon">🎥</div>
+        <div class="doc-card-title">Video Demonstration</div>
+        <div class="doc-card-desc">10-minute live demo covering the full pipeline run, technical architecture walkthrough, prompt engineering strategies, error handling, and evaluation results.</div>
+        <div class="doc-card-link">Watch on Loom ↗</div>
+      </a>
+      <a class="doc-card" href="https://github.com/RishiSehgal/AlphaLens/blob/main/docs/architecture.md" target="_blank">
+        <div class="doc-card-icon">🏗️</div>
+        <div class="doc-card-title">Architecture Reference</div>
+        <div class="doc-card-desc">Deep technical architecture document covering LangGraph state machine internals, all agent implementations, caching strategy, rate limiting design, and RAG pipeline details.</div>
+        <div class="doc-card-link">View on GitHub ↗</div>
+      </a>
+      <a class="doc-card" href="https://github.com/RishiSehgal/AlphaLens/tree/main/tests" target="_blank">
+        <div class="doc-card-icon">✅</div>
+        <div class="doc-card-title">Test Suite</div>
+        <div class="doc-card-desc">70 pytest tests across 4 modules — data fusion, RAG pipeline, verification agent, and evaluation metrics. All mocked for deterministic execution without live API calls.</div>
+        <div class="doc-card-link">View Tests ↗</div>
+      </a>
+      <a class="doc-card" href="https://github.com/RishiSehgal/AlphaLens/blob/main/examples/sample_output_NVDA.json" target="_blank">
+        <div class="doc-card-icon">📁</div>
+        <div class="doc-card-title">Sample Output</div>
+        <div class="doc-card-desc">Full pipeline state JSON for NVDA — 5 RAG chunks, 3 risk flags, DCF bear/base/bull, all report sections, verification divergences, and 47.3s pipeline metadata.</div>
+        <div class="doc-card-link">View Sample ↗</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SETUP ═════════════════════════════════════════════════════════════════ -->
+<section class="section" id="setup">
+  <div class="container">
+    <div class="section-label">Quick Start</div>
+    <div class="section-title">Run Locally in 3 Steps</div>
+    <p class="section-sub">Requires Python 3.11+ and three free API keys. No paid services needed.</p>
+
+    <div class="code-block">
+<span class="comment"># 1. Clone and install dependencies</span>
+<span class="cmd">git clone</span> <span class="val">https://github.com/RishiSehgal/AlphaLens.git</span>
+<span class="cmd">cd</span> AlphaLens
+<span class="cmd">pip install</span> -r requirements.txt
+
+<span class="comment"># 2. Add your free API keys to .env  (copy from .env.example)</span>
+GOOGLE_API_KEY=<span class="val">your_key_from_aistudio.google.com</span>
+ALPHA_VANTAGE_API_KEY=<span class="val">your_key_from_alphavantage.co</span>
+FRED_API_KEY=<span class="val">your_key_from_fred.stlouisfed.org</span>
+
+<span class="comment"># 3. Launch</span>
+<span class="cmd">streamlit run</span> app.py
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <a href="https://aistudio.google.com/apikey" target="_blank" class="btn btn-outline" style="font-size:0.8rem;">Get Google API Key ↗</a>
+      <a href="https://www.alphavantage.co/support/#api-key" target="_blank" class="btn btn-outline" style="font-size:0.8rem;">Get Alpha Vantage Key ↗</a>
+      <a href="https://fred.stlouisfed.org/docs/api/api_key.html" target="_blank" class="btn btn-outline" style="font-size:0.8rem;">Get FRED Key ↗</a>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Not Financial Advice.</strong> AlphaLens is an educational AI research tool built for a Generative AI capstone project.
+      All analysis is AI-generated from public data sources and may contain errors or omissions.
+      Do not make investment decisions based solely on this output.
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════════════════════════════ -->
 <footer>
   <div class="container">
-    <div style="margin-bottom:1rem;">
-      <strong style="color:var(--text-primary);">AlphaLens</strong>
-      &nbsp;·&nbsp; Northeastern MS Generative AI Capstone &nbsp;·&nbsp; 2026
-    </div>
-    <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
-      <a href="https://github.com" target="_blank">GitHub</a>
-      <a href="#" target="_blank">Live Demo</a>
-      <a href="docs/architecture.html" target="_blank">Architecture</a>
+    <div style="font-size:1rem;font-weight:700;color:var(--t1);margin-bottom:0.4rem;">AlphaLens</div>
+    <div style="margin-bottom:0.75rem;">Built by <strong style="color:var(--t2);">Rishi Sehgal</strong> · sehgal.r@northeastern.edu</div>
+    <div class="footer-links">
+      <a href="https://github.com/RishiSehgal/AlphaLens" target="_blank">GitHub</a>
+      <a href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957" target="_blank">Video Demo</a>
+      <a href="documentation.html" target="_blank">Documentation</a>
+      <a href="https://github.com/RishiSehgal/AlphaLens/blob/main/docs/architecture.md" target="_blank">Architecture</a>
       <a href="mailto:sehgal.r@northeastern.edu">Contact</a>
     </div>
-    <div style="margin-top:1rem;font-size:0.75rem;">
-      Not financial advice. Educational use only. Data from public APIs.
-    </div>
+    <div style="margin-top:0.75rem;">Not financial advice · Educational use only · Data from public APIs · © 2026</div>
   </div>
 </footer>
 
