@@ -1,0 +1,263 @@
+{
+  "ticker": "NVDA",
+  "financial_data": {
+    "ticker": "NVDA",
+    "company_name": "NVIDIA Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "price": 875.40,
+    "market_cap": 2155000000000,
+    "pe_ratio": 72.1,
+    "forward_pe": 38.5,
+    "dividend_yield": 0.0003,
+    "beta": 1.68,
+    "week_52_high": 974.00,
+    "week_52_low": 435.61,
+    "revenue": 79775000000,
+    "net_income": 29760000000,
+    "gross_margin": 0.727,
+    "operating_margin": 0.548,
+    "eps": 11.93,
+    "cash_flow_from_operations": 28084000000,
+    "free_cash_flow": 26940000000,
+    "total_debt": 9095000000,
+    "total_cash": 25984000000,
+    "debt_to_equity": 0.41,
+    "current_ratio": 4.17,
+    "filing_urls": [
+      {
+        "form_type": "10-K",
+        "filing_date": "2024-02-21",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm",
+        "accession_number": "0001045810-24-000029"
+      }
+    ],
+    "macro": {
+      "FEDFUNDS": { "current_value": 5.33, "previous_value": 5.5, "trend": "down" },
+      "GDP": { "current_value": 25.46, "previous_value": 25.2, "trend": "up" },
+      "CPIAUCSL": { "current_value": 315.1, "previous_value": 312.0, "trend": "up" },
+      "UNRATE": { "current_value": 3.9, "previous_value": 3.8, "trend": "up" }
+    },
+    "sources_status": {
+      "alpha_vantage_income": "ok",
+      "alpha_vantage_balance": "ok",
+      "alpha_vantage_cashflow": "ok",
+      "yfinance": "ok",
+      "edgar": "ok",
+      "fred": "ok"
+    }
+  },
+  "rag_chunks": [
+    {
+      "text": "Data center revenue grew 217% year over year to $47.5 billion, driven by strong demand for our Hopper GPU computing platform from cloud service providers, consumer internet companies, and enterprises.",
+      "metadata": {
+        "ticker": "NVDA",
+        "section_name": "MD&A",
+        "filing_type": "10-K",
+        "filing_date": "2024-02-21",
+        "chunk_index": 0,
+        "estimated_page": 28,
+        "source_file": "nvda-20240128.htm"
+      },
+      "query_label": "revenue growth segments",
+      "relevance_score": 0.912
+    },
+    {
+      "text": "We depend on a limited number of customers for a significant portion of our revenue. Sales to one customer represented approximately 13% of our total revenue for fiscal year 2024. The loss of this customer could have a material adverse effect on our business.",
+      "metadata": {
+        "ticker": "NVDA",
+        "section_name": "Risk Factors",
+        "filing_type": "10-K",
+        "filing_date": "2024-02-21",
+        "chunk_index": 1,
+        "estimated_page": 15,
+        "source_file": "nvda-20240128.htm"
+      },
+      "query_label": "risk factors",
+      "relevance_score": 0.887
+    },
+    {
+      "text": "Export restrictions imposed by the U.S. government on advanced computing chips, including our A100 and H100 products, have materially affected our ability to sell to customers in certain regions including China. We have developed alternative products for these markets, but there can be no assurance that these alternatives will be accepted by customers or comply with future regulatory requirements.",
+      "metadata": {
+        "ticker": "NVDA",
+        "section_name": "Risk Factors",
+        "filing_type": "10-K",
+        "filing_date": "2024-02-21",
+        "chunk_index": 2,
+        "estimated_page": 18,
+        "source_file": "nvda-20240128.htm"
+      },
+      "query_label": "risk factors",
+      "relevance_score": 0.874
+    },
+    {
+      "text": "Our gross margin increased to 72.7% in fiscal 2024 from 56.9% in fiscal 2023, primarily driven by higher data center revenue, which carries above-average margins due to the premium pricing of our H100 GPU systems and the favorable product mix shift toward data center.",
+      "metadata": {
+        "ticker": "NVDA",
+        "section_name": "MD&A",
+        "filing_type": "10-K",
+        "filing_date": "2024-02-21",
+        "chunk_index": 3,
+        "estimated_page": 31,
+        "source_file": "nvda-20240128.htm"
+      },
+      "query_label": "gross margin",
+      "relevance_score": 0.856
+    },
+    {
+      "text": "We were subject to multiple lawsuits alleging antitrust violations related to our acquisition of Mellanox Technologies and our market position in the GPU industry. We have settled certain claims and are defending others. Legal proceedings involve inherent uncertainties and could result in material expenditures.",
+      "metadata": {
+        "ticker": "NVDA",
+        "section_name": "Risk Factors",
+        "filing_type": "10-K",
+        "filing_date": "2024-02-21",
+        "chunk_index": 4,
+        "estimated_page": 22,
+        "source_file": "nvda-20240128.htm"
+      },
+      "query_label": "risk factors",
+      "relevance_score": 0.821
+    }
+  ],
+  "quant_results": {
+    "dcf": {
+      "bear": 480.00,
+      "base": 720.00,
+      "bull": 1150.00,
+      "wacc": 0.1042,
+      "growth_stage1": 0.35,
+      "growth_stage2": 0.15,
+      "terminal_growth": 0.035,
+      "confidence": "MEDIUM",
+      "note": "DCF capped at MEDIUM confidence by design. Revenue growth assumptions are highly speculative given AI demand volatility."
+    },
+    "technicals": {
+      "rsi": 61.4,
+      "rsi_signal": "neutral",
+      "macd_line": 8.24,
+      "signal_line": 5.91,
+      "histogram": 2.33,
+      "macd_signal": "bullish",
+      "price_6m_return": 0.182
+    },
+    "earnings_surprise": {
+      "quarter": "Q4 FY2024",
+      "actual": 5.16,
+      "estimate": 4.64,
+      "surprise_pct": 11.2,
+      "direction": "beat"
+    }
+  },
+  "risk_flags": [
+    {
+      "type": "customer_concentration",
+      "severity": "MEDIUM",
+      "description": "A single customer represents ~13% of total revenue. Loss of this relationship could materially impact results.",
+      "citation": "Risk Factors p.15 · nvda-20240128.htm",
+      "confirmed": true,
+      "pattern_matched": "significant customer"
+    },
+    {
+      "type": "regulatory",
+      "severity": "HIGH",
+      "description": "U.S. export restrictions on H100/A100 chips to China have materially impacted revenue and may expand. Compliance risk is ongoing.",
+      "citation": "Risk Factors p.18 · nvda-20240128.htm",
+      "confirmed": true,
+      "pattern_matched": "export control"
+    },
+    {
+      "type": "litigation",
+      "severity": "MEDIUM",
+      "description": "Active antitrust lawsuits related to GPU market position and the Mellanox acquisition. Settlement costs are uncertain.",
+      "citation": "Risk Factors p.22 · nvda-20240128.htm",
+      "confirmed": true,
+      "pattern_matched": "lawsuit"
+    }
+  ],
+  "verification": {
+    "divergences": [
+      {
+        "field": "growth_sustainability",
+        "management_claim": "Data center demand driven by secular AI infrastructure buildout is expected to continue.",
+        "data_evidence": "Revenue grew 217% YoY — unsustainable at this rate; consensus models project deceleration to 40–60% growth in FY2025.",
+        "severity": "MEDIUM"
+      }
+    ],
+    "confidence_scores": {
+      "executive_summary": "HIGH",
+      "financial_health": "HIGH",
+      "valuation": "MEDIUM",
+      "risk_flags": "HIGH",
+      "verification_verdict": "MEDIUM"
+    },
+    "verification_verdict": "NVDA's financial performance is exceptional and well-supported by data. The primary divergence is growth sustainability — management's optimism is directionally correct but the rate of growth is mathematically unsustainable. Export control risk is the most material unquantified exposure.",
+    "llm_available": true
+  },
+  "report": {
+    "ticker": "NVDA",
+    "overall_confidence": "MEDIUM",
+    "disclaimer": "This report is AI-generated for educational purposes only. Not financial advice.",
+    "sections": {
+      "executive_summary": {
+        "title": "Executive Summary",
+        "content": "NVIDIA Corporation (NVDA) delivered extraordinary results in fiscal year 2024, with revenue of $79.8B (up 122% YoY) driven entirely by AI-related data center demand for its H100/A100 GPU systems. Gross margins expanded 15.8 percentage points to 72.7%, reflecting pricing power and favorable product mix. The company generated $26.9B in free cash flow. The primary risks are regulatory (U.S. export controls), customer concentration, and the inherently cyclical nature of semiconductor capex. At current valuations (P/E 72x), the stock prices in sustained hyper-growth that may be difficult to maintain. Confidence: MEDIUM due to valuation uncertainty.",
+        "confidence": "MEDIUM",
+        "citations": [
+          { "section_name": "MD&A", "page_number": 28, "source_file": "nvda-20240128.htm" },
+          { "section_name": "Risk Factors", "page_number": 15, "source_file": "nvda-20240128.htm" }
+        ]
+      },
+      "financial_health": {
+        "title": "Financial Health",
+        "content": "NVDA's balance sheet is fortress-grade. Net cash position of $16.9B ($25.9B cash minus $9.1B debt). Current ratio of 4.17x. Free cash flow conversion of 34% of revenue — exceptional for a semiconductor company. Operating margins of 54.8% reflect the high-margin nature of GPU compute. Revenue grew 122% in FY2024 on top of 0% growth in FY2023, highlighting the boom-bust semiconductor cycle risk. The data center segment (60% of revenue) is the singular growth driver; gaming (17%) remains cyclically depressed.",
+        "confidence": "HIGH",
+        "citations": [
+          { "section_name": "Financial Statements", "page_number": 45, "source_file": "nvda-20240128.htm" }
+        ]
+      },
+      "valuation": {
+        "title": "Valuation",
+        "content": "DCF analysis yields a wide range: Bear $480 / Base $720 / Bull $1,150 at 10.4% WACC. The bear case assumes revenue growth decelerates to 15% by Year 3; the bull case assumes 35% sustained growth. The wide range reflects genuine uncertainty about AI infrastructure spending durability. At $875, the stock trades at the upper end of the base case. RSI of 61.4 is neutral — no technical overbought signal. MACD is bullish (positive histogram). Q4 FY2024 earnings beat by 11.2% ($5.16 actual vs $4.64 estimate). Confidence: MEDIUM (all DCF models are inherently MEDIUM).",
+        "confidence": "MEDIUM",
+        "citations": []
+      },
+      "risk_flags": {
+        "title": "Risk Flags",
+        "content": "Three material risks identified from 10-K filing analysis. Export controls on H100/A100 are the highest-severity risk — the company has already developed alternative (lower-spec) chips for China, but the regulatory environment remains uncertain. Customer concentration risk is meaningful but manageable at 13%. Litigation risk from antitrust claims is ongoing but unlikely to be existential.",
+        "confidence": "HIGH",
+        "citations": [
+          { "section_name": "Risk Factors", "page_number": 18, "source_file": "nvda-20240128.htm" }
+        ]
+      },
+      "verification_verdict": {
+        "title": "Verification Verdict",
+        "content": "One divergence identified: management's narrative emphasizes secular AI demand as a persistent tailwind, but the 217% YoY growth rate is mathematically unsustainable by Year 2. Consensus models project deceleration to 40–60% growth in FY2025 — still exceptional, but a meaningful step-down. All financial figures cross-check accurately. Risk flags are well-supported by specific filing citations. Overall, the analysis is internally consistent with one forward-looking growth divergence.",
+        "confidence": "MEDIUM",
+        "citations": []
+      }
+    }
+  },
+  "metadata": {
+    "pipeline_start": 1714000000.0,
+    "pipeline_total_seconds": 47.3,
+    "agent_latencies": {
+      "data_fusion": 8.1,
+      "rag_citation": 22.4,
+      "quant_analysis": 3.2,
+      "risk_scanner": 9.8,
+      "verification": 6.1,
+      "report_synthesis": 18.7
+    },
+    "sources_status": {
+      "alpha_vantage_income": "ok",
+      "alpha_vantage_balance": "ok",
+      "yfinance": "ok",
+      "edgar": "ok",
+      "fred": "ok"
+    },
+    "rag_available": true,
+    "rag_filing_date": "2024-02-21"
+  },
+  "error_log": [],
+  "chat_history": []
+}

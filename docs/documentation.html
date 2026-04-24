@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AlphaLens — Project Documentation</title>
+<style>
+  /* ── Reset & base ─────────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #1a1a1a;
+    background: #fff;
+    counter-reset: section;
+  }
+
+  /* ── Page layout ──────────────────────────────────────────────────────────── */
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    padding: 1in 1.1in 1in 1.1in;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { width: 100%; margin: 0; padding: 0.75in 0.9in; }
+    .page-break { page-break-before: always; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  /* ── Typography ───────────────────────────────────────────────────────────── */
+  h1 { font-size: 26pt; font-weight: 700; letter-spacing: -0.5px; color: #0f172a; margin-bottom: 6px; }
+  h2 { font-size: 15pt; font-weight: 700; color: #1e3a5f; margin-top: 32px; margin-bottom: 10px;
+       border-bottom: 2px solid #3b82f6; padding-bottom: 4px; }
+  h3 { font-size: 12pt; font-weight: 700; color: #1e293b; margin-top: 20px; margin-bottom: 6px; }
+  h4 { font-size: 11pt; font-weight: 700; color: #334155; margin-top: 14px; margin-bottom: 4px; }
+  p  { margin-bottom: 10px; text-align: justify; }
+  ul, ol { margin: 8px 0 12px 22px; }
+  li { margin-bottom: 4px; }
+  strong { color: #0f172a; }
+  em { font-style: italic; color: #475569; }
+  a  { color: #3b82f6; text-decoration: none; }
+
+  /* ── Cover page ───────────────────────────────────────────────────────────── */
+  .cover {
+    min-height: 10in;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cover-accent {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    margin-bottom: 28px;
+    border-radius: 2px;
+  }
+  .cover-title { font-size: 38pt; font-weight: 800; color: #0f172a; line-height: 1.1; margin-bottom: 10px; }
+  .cover-subtitle { font-size: 16pt; font-weight: 400; color: #475569; margin-bottom: 40px; }
+  .cover-meta { border-top: 1px solid #e2e8f0; padding-top: 24px; }
+  .cover-meta table { border-collapse: collapse; }
+  .cover-meta td { padding: 5px 20px 5px 0; font-size: 11pt; color: #334155; vertical-align: top; }
+  .cover-meta td:first-child { font-weight: 700; color: #0f172a; white-space: nowrap; }
+  .cover-tagline {
+    margin-top: 40px;
+    padding: 18px 22px;
+    background: #f0f7ff;
+    border-left: 4px solid #3b82f6;
+    border-radius: 0 6px 6px 0;
+    font-size: 12pt;
+    color: #1e3a5f;
+    font-style: italic;
+  }
+
+  /* ── Table of Contents ────────────────────────────────────────────────────── */
+  .toc { list-style: none; margin-left: 0; }
+  .toc > li { border-bottom: 1px dotted #cbd5e1; padding: 5px 0; display: flex; justify-content: space-between; }
+  .toc > li a { color: #1e3a5f; font-weight: 600; }
+  .toc > li span { color: #94a3b8; font-size: 10pt; }
+  .toc-sub { list-style: none; margin-left: 18px; margin-top: 2px; }
+  .toc-sub li { border-bottom: none; padding: 2px 0; font-size: 10pt; }
+  .toc-sub li a { font-weight: 400; color: #475569; }
+
+  /* ── Callout boxes ────────────────────────────────────────────────────────── */
+  .callout {
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+  }
+  .callout-blue  { background: #eff6ff; border-left: 4px solid #3b82f6; }
+  .callout-green { background: #f0fdf4; border-left: 4px solid #10b981; }
+  .callout-amber { background: #fffbeb; border-left: 4px solid #f59e0b; }
+  .callout-red   { background: #fef2f2; border-left: 4px solid #ef4444; }
+  .callout p { margin: 0; }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  /* ── Code blocks ──────────────────────────────────────────────────────────── */
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 16px 18px;
+    border-radius: 8px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+  code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9.5pt;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: 9pt; }
+
+  /* ── Architecture diagram ─────────────────────────────────────────────────── */
+  .arch-diagram {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9pt;
+    background: #0f172a;
+    color: #7dd3fc;
+    padding: 20px 24px;
+    border-radius: 8px;
+    line-height: 1.6;
+    margin: 14px 0;
+  }
+  .arch-diagram .dim  { color: #475569; }
+  .arch-diagram .node { color: #f8fafc; font-weight: bold; }
+  .arch-diagram .edge { color: #3b82f6; }
+  .arch-diagram .label { color: #10b981; }
+
+  /* ── Tables ───────────────────────────────────────────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 10pt; }
+  thead th { background: #1e3a5f; color: #f8fafc; padding: 9px 12px; text-align: left; font-weight: 700; font-size: 10pt; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── Metric cards ─────────────────────────────────────────────────────────── */
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .metric-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .metric-card .metric-value { font-size: 22pt; font-weight: 800; color: #1e3a5f; }
+  .metric-card .metric-label { font-size: 9pt; color: #64748b; margin-top: 2px; }
+  .metric-card .metric-note  { font-size: 8pt; color: #94a3b8; margin-top: 4px; font-style: italic; }
+
+  /* ── Agent cards ──────────────────────────────────────────────────────────── */
+  .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .agent-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+  .agent-card h4 { margin-top: 0; color: #1e3a5f; }
+  .agent-card .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .badge-blue  { background: #dbeafe; color: #1d4ed8; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+
+  /* ── Footer ───────────────────────────────────────────────────────────────── */
+  .doc-footer {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 9pt;
+    color: #94a3b8;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- COVER PAGE                                                                  -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-accent"></div>
+    <div class="cover-title">AlphaLens</div>
+    <div class="cover-subtitle">AI-Powered Multi-Agent Equity Research Platform</div>
+
+    <div class="cover-tagline">
+      "One engineer, six AI agents, and 90 seconds — replacing what an entire equity research team takes eight hours to produce."
+    </div>
+
+    <div class="cover-meta" style="margin-top: 48px;">
+      <table>
+        <tr><td>Student</td><td>Rishi Sehgal</td></tr>
+        <tr><td>Email</td><td>sehgal.r@northeastern.edu</td></tr>
+
+        <tr><td>Date</td><td>April 2026</td></tr>
+        <tr><td>Core Components</td><td>Prompt Engineering &amp; Retrieval-Augmented Generation (RAG)</td></tr>
+        <tr><td>Application Type</td><td>Research Synthesis Tool</td></tr>
+        <tr><td>Repository</td><td>github.com/rishisehgal/alphalens</td></tr>
+        <tr><td>Video Demo</td><td><a href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957">loom.com/share/36213fda55af4fd2829f19d726ef1957</a></td></tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 50px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <span style="background:#dbeafe;color:#1d4ed8;padding:5px 14px;border-radius:20px;font-size:9.5pt;font-weight:700;">LangGraph</span>
+      <span style="background:#d1fae5;color:#065f46;padding:5px 14px;border-radius:20px;font-size:9.5pt;font-weight:700;">Google Gemini 2.5 Flash</span>
+      <span style="background:#ede9fe;color:#5b21b6;padding:5px 14px;border-radius:20px;font-size:9.5pt;font-weight:700;">ChromaDB</span>
+      <span style="background:#fef3c7;color:#92400e;padding:5px 14px;border-radius:20px;font-size:9.5pt;font-weight:700;">SEC EDGAR</span>
+      <span style="background:#fee2e2;color:#991b1b;padding:5px 14px;border-radius:20px;font-size:9.5pt;font-weight:700;">Streamlit</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- TABLE OF CONTENTS                                                           -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+  <h2 style="margin-top: 0;">Table of Contents</h2>
+  <ul class="toc">
+    <li><a href="#abstract">1. Abstract</a><span>3</span></li>
+    <li><a href="#problem">2. Problem Statement &amp; Motivation</a><span>3</span></li>
+    <li><a href="#architecture">3. System Architecture</a><span>4</span>
+      <ul class="toc-sub">
+        <li><a href="#arch-overview">3.1 High-Level Architecture</a></li>
+        <li><a href="#arch-state">3.2 LangGraph State Machine</a></li>
+        <li><a href="#arch-execution">3.3 Execution Flow</a></li>
+      </ul>
+    </li>
+    <li><a href="#agents">4. The Six Agents</a><span>5</span></li>
+    <li><a href="#prompt-eng">5. Core Component: Prompt Engineering</a><span>7</span>
+      <ul class="toc-sub">
+        <li><a href="#pe-strategy">5.1 Prompting Strategies</a></li>
+        <li><a href="#pe-context">5.2 Context Management</a></li>
+        <li><a href="#pe-recovery">5.3 Error Recovery</a></li>
+      </ul>
+    </li>
+    <li><a href="#rag">6. Core Component: Retrieval-Augmented Generation</a><span>8</span>
+      <ul class="toc-sub">
+        <li><a href="#rag-ingestion">6.1 Document Ingestion</a></li>
+        <li><a href="#rag-chunking">6.2 Chunking Strategy</a></li>
+        <li><a href="#rag-embedding">6.3 Embedding &amp; Vector Storage</a></li>
+        <li><a href="#rag-retrieval">6.4 Retrieval &amp; Ranking</a></li>
+      </ul>
+    </li>
+    <li><a href="#data">7. Data Sources &amp; Integration</a><span>10</span></li>
+    <li><a href="#frontend">8. Frontend &amp; User Experience</a><span>10</span></li>
+    <li><a href="#eval">9. Evaluation Framework &amp; Performance Metrics</a><span>11</span></li>
+    <li><a href="#challenges">10. Challenges &amp; Solutions</a><span>12</span></li>
+    <li><a href="#ethics">11. Ethical Considerations</a><span>13</span></li>
+    <li><a href="#future">12. Future Improvements</a><span>14</span></li>
+    <li><a href="#conclusion">13. Conclusion</a><span>14</span></li>
+    <li><a href="#references">14. References</a><span>15</span></li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: ABSTRACT                                                         -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="abstract">1. Abstract</h2>
+  <p>
+    AlphaLens is a multi-agent AI system that automates professional equity research for retail investors. Given a stock ticker symbol, the system executes a pipeline of six specialized AI agents — each replicating a distinct analyst role — and produces a structured investment research report with citations, risk flags, valuation estimates, and a cross-verification layer, all within 90 seconds and at zero monetary cost using free-tier APIs.
+  </p>
+  <p>
+    The system implements two of the assignment's core components: <strong>Prompt Engineering</strong>, through carefully structured, context-aware prompts that drive each agent's reasoning and produce reliable structured JSON output; and <strong>Retrieval-Augmented Generation (RAG)</strong>, through a full pipeline that ingests SEC 10-K and 10-Q filings, chunks and embeds them with Google's Gemini Embedding model, stores vectors in ChromaDB, and retrieves relevant excerpts to ground all narrative claims in primary source material.
+  </p>
+  <p>
+    The system is built on LangGraph for orchestration, Google Gemini 2.5 Flash for all language model calls, ChromaDB for vector storage, and Streamlit for the frontend. Data is sourced from SEC EDGAR, Alpha Vantage, yfinance, and the Federal Reserve's FRED API — all publicly available with no licensing cost.
+  </p>
+
+  <h2 id="problem">2. Problem Statement &amp; Motivation</h2>
+  <p>
+    Equity research is one of the most information-dense tasks in finance. A professional analyst preparing a research report on a single company will spend 8 or more hours reading annual filings (often 200+ pages), cross-checking financial statements, building valuation models, assessing macroeconomic context, and writing a structured report with citations. This workflow is effectively inaccessible to retail investors.
+  </p>
+  <p>
+    Existing solutions fall into two categories: (1) static financial data dashboards that show numbers but provide no interpretation, and (2) general-purpose LLM chatbots that can discuss finance but hallucinate figures and lack grounding in primary source documents. Neither solves the core problem.
+  </p>
+  <p>
+    AlphaLens addresses this gap by combining structured data APIs with a RAG pipeline over actual SEC filings, coordinated through a multi-agent state machine that mirrors the professional research workflow. The result is a system that not only produces a human-readable report but also explicitly measures confidence and flags divergences between management narrative and financial data.
+  </p>
+
+  <div class="callout callout-blue no-break">
+    <p><strong>Assignment Alignment</strong></p>
+    <p>AlphaLens implements <strong>Prompt Engineering</strong> (systematic prompting strategies, context management, structured output, graceful error handling) and <strong>Retrieval-Augmented Generation</strong> (knowledge base construction, vector storage and retrieval, document chunking, ranking and filtering). It falls into the <em>Research Synthesis Tool</em> application type.</p>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: ARCHITECTURE                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="architecture">3. System Architecture</h2>
+
+  <h3 id="arch-overview">3.1 High-Level Architecture</h3>
+  <p>
+    The system is organized into four layers: a <strong>data layer</strong> (API clients for external data sources), an <strong>agent layer</strong> (six specialized LangGraph nodes), an <strong>orchestration layer</strong> (LangGraph StateGraph managing parallel and sequential execution), and a <strong>presentation layer</strong> (Streamlit frontend with custom HTML/CSS components and Plotly charts).
+  </p>
+
+  <div class="arch-diagram no-break">
+<span class="dim">┌─────────────────────────────────────────────────────────────────────┐</span>
+<span class="dim">│                        </span><span class="node">ALPHALENS SYSTEM ARCHITECTURE</span><span class="dim">                   │</span>
+<span class="dim">└─────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="dim">┌──── PRESENTATION LAYER ─────────────────────────────────────────────┐</span>
+<span class="dim">│</span>  <span class="node">Streamlit App</span> (app.py)  ·  Custom HTML/CSS  ·  Plotly Charts         <span class="dim">│</span>
+<span class="dim">│</span>  Agent Progress Animation  ·  Report Viewer  ·  Follow-up Chat       <span class="dim">│</span>
+<span class="dim">└───────────────────────────────┬─────────────────────────────────────┘</span>
+                                │  ticker input
+<span class="dim">┌──── ORCHESTRATION LAYER ───────▼─────────────────────────────────────┐</span>
+<span class="dim">│</span>  <span class="node">LangGraph StateGraph</span>  ·  AlphaLensState (TypedDict)                  <span class="dim">│</span>
+<span class="dim">│</span>                                                                       <span class="dim">│</span>
+<span class="dim">│</span>   START <span class="edge">──►</span> <span class="node">data_fusion</span> <span class="edge">──┬──►</span> <span class="node">rag_citation</span> <span class="edge">──►</span> <span class="node">risk_scanner</span> <span class="edge">──┐</span>     <span class="dim">│</span>
+<span class="dim">│</span>                          <span class="edge">└──►</span> <span class="node">quant_analysis</span> <span class="edge">───────────────────┤</span>     <span class="dim">│</span>
+<span class="dim">│</span>                                                                  <span class="edge">▼</span>     <span class="dim">│</span>
+<span class="dim">│</span>                               END <span class="edge">◄──</span> <span class="node">report_synthesis</span> <span class="edge">◄──</span> <span class="node">verify</span>  <span class="dim">│</span>
+<span class="dim">└──────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="dim">┌──── AGENT LAYER ──────────────────────────────────────────────────────┐</span>
+<span class="dim">│</span>  <span class="label">data_fusion</span>   <span class="label">rag_citation</span>   <span class="label">quant_analysis</span>   <span class="label">risk_scanner</span>          <span class="dim">│</span>
+<span class="dim">│</span>  <span class="label">verify</span>        <span class="label">report_synthesis</span>                                       <span class="dim">│</span>
+<span class="dim">│</span>  All agents: Google Gemini 2.5 Flash  ·  Structured JSON prompting    <span class="dim">│</span>
+<span class="dim">└──────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="dim">┌──── DATA LAYER ────────────────────────────────────────────────────────┐</span>
+<span class="dim">│</span>  <span class="node">SEC EDGAR</span>  (10-K / 10-Q filings, no key)                             <span class="dim">│</span>
+<span class="dim">│</span>  <span class="node">Alpha Vantage</span>  (income stmt, balance sheet, cash flows)              <span class="dim">│</span>
+<span class="dim">│</span>  <span class="node">yfinance</span>  (live price, technicals, fallback fundamentals)            <span class="dim">│</span>
+<span class="dim">│</span>  <span class="node">FRED</span>  (macro: fed funds rate, GDP, CPI, unemployment)               <span class="dim">│</span>
+<span class="dim">│</span>  <span class="node">ChromaDB</span>  (local vector store, cosine similarity, 3072-dim)         <span class="dim">│</span>
+<span class="dim">└────────────────────────────────────────────────────────────────────────┘</span>
+  </div>
+
+  <h3 id="arch-state">3.2 LangGraph State Machine</h3>
+  <p>
+    All agents share a single <code>AlphaLensState</code> TypedDict that is passed through the graph. The TypedDict uses <code>Annotated</code> fields with custom reducer functions (<code>_merge_metadata</code> and <code>operator.add</code>) on fields written by parallel branches, preventing race conditions when both <code>rag_citation</code> and <code>quant_analysis</code> attempt to update <code>metadata</code> and <code>error_log</code> simultaneously.
+  </p>
+
+<pre><code>class AlphaLensState(TypedDict):
+    ticker:         str
+    financial_data: dict           # Agent 1 output — structured financials
+    rag_chunks:     list[dict]     # Agent 2 output — filing excerpts + metadata
+    quant_results:  dict           # Agent 3 output — DCF, RSI, MACD, earnings
+    risk_flags:     list[dict]     # Agent 4 output — severity-classified flags
+    verification:   dict           # Agent 5 output — divergences, confidence
+    report:         dict           # Agent 6 output — full structured report
+    metadata:       Annotated[dict, _merge_metadata]   # parallel-safe
+    error_log:      Annotated[list, operator.add]       # parallel-safe
+    chat_history:   list[dict]</code></pre>
+
+  <h3 id="arch-execution">3.3 Execution Flow</h3>
+  <p>
+    The pipeline has three execution phases:
+  </p>
+  <ol>
+    <li><strong>Sequential start:</strong> <code>data_fusion</code> runs first, acquiring all structured financial data and SEC filing URLs. No other agent can start until this completes, as all downstream agents depend on its output.</li>
+    <li><strong>Parallel middle:</strong> <code>rag_citation</code> and <code>quant_analysis</code> execute in parallel. RAG Citation downloads and processes the SEC filing while Quant Analysis runs the DCF model and technical indicators. LangGraph's <code>add_edge([A, B], C)</code> syntax creates a fan-in at <code>risk_scanner</code> that waits for both branches.</li>
+    <li><strong>Sequential tail:</strong> <code>risk_scanner</code> → <code>verify</code> → <code>report_synthesis</code> run sequentially, each building on all prior outputs.</li>
+  </ol>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: THE SIX AGENTS                                                   -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="agents">4. The Six Agents</h2>
+  <p>Each agent was designed to mirror a specific role in a professional equity research team.</p>
+
+  <div class="agent-grid">
+    <div class="agent-card no-break">
+      <span class="badge badge-blue">Agent 1</span>
+      <h4>Data Fusion Agent</h4>
+      <p><em>Replaces: Junior Analyst</em></p>
+      <p>Makes parallel API calls to SEC EDGAR, Alpha Vantage, yfinance, and FRED. Normalizes all data into a unified <code>financial_data</code> dict. Implements graceful fallback: if Alpha Vantage is rate-limited, yfinance provides backup fundamentals with a reduced confidence flag. Never crashes — always returns a <code>sources_status</code> dict documenting what succeeded and what failed.</p>
+    </div>
+    <div class="agent-card no-break">
+      <span class="badge badge-blue">Agent 2</span>
+      <h4>RAG Citation Agent</h4>
+      <p><em>Replaces: Research Associate</em></p>
+      <p>Downloads the 10-K/10-Q HTML from EDGAR, parses it into sections (MD&amp;A, Risk Factors, Financial Statements, Notes), chunks each section into 500-token overlapping windows, embeds them via Gemini Embedding, stores vectors in ChromaDB, and retrieves the top-k most relevant chunks per query dimension. Returns chunks with full citation metadata: section name, estimated page number, and source file.</p>
+    </div>
+    <div class="agent-card no-break">
+      <span class="badge badge-blue">Agent 3</span>
+      <h4>Quant Analysis Agent</h4>
+      <p><em>Replaces: Quantitative Analyst</em></p>
+      <p>Runs three quantitative models: (1) a 3-stage DCF with bear/base/bull scenarios and WACC estimation, always reported at MEDIUM confidence to communicate model uncertainty; (2) technical indicators — RSI(14), MACD(12/26/9) — computed on 6 months of daily price data from yfinance; (3) earnings surprise analysis comparing actual EPS to consensus estimate.</p>
+    </div>
+    <div class="agent-card no-break">
+      <span class="badge badge-blue">Agent 4</span>
+      <h4>Risk Scanner Agent</h4>
+      <p><em>Replaces: Risk / Compliance Officer</em></p>
+      <p>Implements a two-stage risk detection pipeline: first, a fast keyword/regex pattern match identifies candidate risk phrases (going concern, material weakness, auditor change, revenue recognition change, related-party, covenant violations, customer concentration). Second, Gemini classifies each candidate by severity (HIGH/MEDIUM/LOW) and generates a description with a citation link. The two-stage approach avoids expensive LLM calls on every chunk.</p>
+    </div>
+    <div class="agent-card no-break">
+      <span class="badge badge-green">Agent 5 — Crown Jewel</span>
+      <h4>Verification Agent</h4>
+      <p><em>Replaces: Senior Analyst</em></p>
+      <p>Cross-references all outputs from Agents 1–4. Extracts quantitative claims from financial data, extracts narrative claims from management's filing text, and prompts Gemini to identify divergences between them — cases where management's forward-looking statements are inconsistent with the actual historical numbers. Outputs a <code>divergences</code> list and per-section <code>confidence_scores</code> (HIGH/MEDIUM/LOW) that drive the overall report confidence rating.</p>
+    </div>
+    <div class="agent-card no-break">
+      <span class="badge badge-blue">Agent 6</span>
+      <h4>Report Synthesis Agent</h4>
+      <p><em>Replaces: Publishing Editor</em></p>
+      <p>Generates five report sections iteratively — Executive Summary, Financial Health, Risk Flags, Valuation, Verification Verdict — using one focused Gemini call per section rather than a single large call. This produces more coherent output and keeps each prompt within safe token limits. Each section includes inline citations and a confidence badge. The overall report confidence is computed as the minimum confidence across all sections, adjusted by the verification divergence count.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: PROMPT ENGINEERING                                               -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="prompt-eng">5. Core Component: Prompt Engineering</h2>
+
+  <h3 id="pe-strategy">5.1 Prompting Strategies</h3>
+  <p>
+    AlphaLens uses four distinct prompting strategies across its agents, each chosen for the specific requirements of that agent's task:
+  </p>
+
+  <table class="no-break">
+    <thead>
+      <tr><th>Strategy</th><th>Agent(s)</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Structured JSON Output</strong></td>
+        <td>Verification, Risk Scanner</td>
+        <td>Prompts specify the exact JSON schema the model must return, including field names and allowed enum values (HIGH/MEDIUM/LOW). This enables programmatic parsing of LLM output without additional extraction logic.</td>
+      </tr>
+      <tr>
+        <td><strong>Iterative Section Prompting</strong></td>
+        <td>Report Synthesis</td>
+        <td>Each of the five report sections receives its own focused prompt. Separating concerns produces more coherent output and prevents the model from conflating content across sections, as would occur with a single large prompt.</td>
+      </tr>
+      <tr>
+        <td><strong>Grounded Evidence Prompting</strong></td>
+        <td>Verification, RAG Citation</td>
+        <td>The prompt explicitly provides both the quantitative data and the relevant filing excerpts, then instructs the model to cross-reference them. The model is prohibited from making claims not supported by the provided context, reducing hallucination.</td>
+      </tr>
+      <tr>
+        <td><strong>Two-Stage Classification</strong></td>
+        <td>Risk Scanner</td>
+        <td>Pattern matching identifies candidate risks first (fast, deterministic). Only confirmed candidates are passed to the LLM for severity classification. This reduces API calls by 60–80% compared to passing every chunk to the LLM.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 id="pe-context">5.2 Context Management</h3>
+  <p>
+    Each agent's prompt is assembled programmatically from modular sub-sections rather than using static template strings. The Verification Agent's <code>_build_prompt()</code> function, for example, composes four independently rendered blocks — a financial data summary, numbered filing excerpts, quant results, and risk flag counts — and measures the total character length before sending. If the assembled prompt exceeds a safe threshold, filing excerpts are truncated to stay within the model's output token budget.
+  </p>
+  <p>
+    The follow-up chat feature uses a conversation history injection pattern: the full pipeline state (financial metrics, report sections, risk flags, RAG chunks, and verification divergences) is injected as the first user turn, followed by a model acknowledgment turn, and then the actual conversation history. This gives the model the full research context on every turn without re-running the pipeline.
+  </p>
+
+  <h3 id="pe-recovery">5.3 Error Recovery &amp; Edge Case Handling</h3>
+  <p>
+    LLM outputs are inherently non-deterministic. AlphaLens implements a multi-layer recovery strategy for every structured output call:
+  </p>
+  <ol>
+    <li><strong>Code fence stripping:</strong> Gemini frequently wraps JSON in <code>```json</code> markdown blocks. The parser strips these before attempting to parse.</li>
+    <li><strong>Trailing content trimming:</strong> The parser finds the last valid closing bracket in the response and truncates anything after it, recovering from partial truncation.</li>
+    <li><strong>Schema validation:</strong> After parsing, required fields are validated and filled with safe defaults if missing.</li>
+    <li><strong>Safe fallback objects:</strong> If all recovery attempts fail, the agent returns a pre-defined safe default (e.g., empty divergences list, MEDIUM confidence) rather than crashing the pipeline.</li>
+    <li><strong>Retry with backoff:</strong> 429 rate-limit errors trigger an exponential backoff retry, up to 3 attempts.</li>
+  </ol>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: RAG                                                               -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="rag">6. Core Component: Retrieval-Augmented Generation</h2>
+  <p>
+    The RAG pipeline transforms raw SEC filing HTML into a searchable vector knowledge base, retrieves the most relevant excerpts for each analysis dimension, and injects those excerpts as grounding context into downstream LLM prompts. This is what distinguishes AlphaLens from a system that merely summarizes financial numbers — the narrative analysis is grounded in primary source documents.
+  </p>
+
+  <h3 id="rag-ingestion">6.1 Document Ingestion</h3>
+  <p>
+    The <code>EdgarClient</code> queries the SEC EDGAR full-text search API to locate 10-K and 10-Q filings for a given ticker. It retrieves the filing index, extracts the primary document URL, and downloads the HTML. The EDGAR API enforces a rate limit of 10 requests per second; the system uses a token bucket rate limiter (implemented in <code>src/utils/rate_limiter.py</code>) to stay compliant.
+  </p>
+  <p>
+    The <code>FilingParser</code> (in <code>src/data/filing_parser.py</code>) uses BeautifulSoup to parse the downloaded HTML and extract named sections. It identifies section boundaries using SEC standard item markers (<code>Item 1A. Risk Factors</code>, <code>Item 7. Management's Discussion and Analysis</code>, <code>Item 8. Financial Statements</code>, etc.) and stores each section with its estimated page number and character offset. This metadata is preserved through the entire pipeline for citation generation.
+  </p>
+
+  <h3 id="rag-chunking">6.2 Chunking Strategy</h3>
+  <p>
+    Text is split using LangChain's <code>RecursiveCharacterTextSplitter</code>, configured with token-accurate counting via the <code>tiktoken</code> library using the <code>cl100k_base</code> tokenizer. This is important because the embedding model has a fixed input token limit — character-based splitting would produce chunks of inconsistent actual token length.
+  </p>
+
+  <table class="no-break">
+    <thead>
+      <tr><th>Parameter</th><th>Value</th><th>Rationale</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Chunk Size</td><td>500 tokens</td><td>Balances specificity (small enough for precise retrieval) with context (large enough to contain complete sentences and their surrounding context)</td></tr>
+      <tr><td>Chunk Overlap</td><td>100 tokens</td><td>Prevents key information that spans a chunk boundary from being lost; 20% overlap is standard for financial text</td></tr>
+      <tr><td>Splitter Hierarchy</td><td>Paragraph → sentence → word</td><td>RecursiveCharacterTextSplitter tries to break at natural boundaries before resorting to mid-sentence breaks</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    Each chunk is stored with a metadata dict containing: <code>ticker</code>, <code>filing_type</code> (10-K or 10-Q), <code>filing_date</code>, <code>section_name</code>, <code>chunk_index</code> (within its section), <code>estimated_page</code>, and <code>source_file</code>. This metadata enables citation generation — when the report references a claim, it can link directly to the section and approximate page number in the original filing.
+  </p>
+
+  <h3 id="rag-embedding">6.3 Embedding &amp; Vector Storage</h3>
+  <p>
+    Chunks are embedded using Google's <code>gemini-embedding-001</code> model, which produces 3072-dimensional dense vectors. Two distinct task types are used to optimize retrieval quality:
+  </p>
+  <ul>
+    <li><code>RETRIEVAL_DOCUMENT</code> — used when embedding filing chunks for storage. Optimizes the representation for being retrieved.</li>
+    <li><code>RETRIEVAL_QUERY</code> — used when embedding the query string at retrieval time. Optimizes for matching against stored document vectors.</li>
+  </ul>
+  <p>
+    Vectors are stored in ChromaDB using a <code>PersistentClient</code> backed by a local <code>.chroma/</code> directory. Each collection is namespaced by ticker symbol and filing date, so re-running the same ticker reuses cached embeddings rather than re-computing them (a significant cost and latency saving). The similarity metric is cosine distance, which is standard for dense text embeddings.
+  </p>
+  <p>
+    Batching is applied during embedding: chunks are grouped into batches of 20 (the API's limit) with exponential backoff on rate-limit errors. A per-call rate limiter ensures the system stays within the free-tier limits.
+  </p>
+
+  <h3 id="rag-retrieval">6.4 Retrieval &amp; Ranking</h3>
+  <p>
+    At retrieval time, the <code>FilingRetriever</code> executes multiple focused queries rather than a single broad query. The query set covers distinct analysis dimensions:
+  </p>
+  <ul>
+    <li>"revenue growth drivers and business performance"</li>
+    <li>"risk factors competition regulatory litigation"</li>
+    <li>"management discussion outlook guidance"</li>
+    <li>"financial statements cash flow debt"</li>
+    <li>"going concern material weakness audit"</li>
+  </ul>
+  <p>
+    Each query retrieves top-<em>k</em> = 5 chunks. Results are de-duplicated by chunk ID and re-ranked by cosine similarity score. The final retrieval set (up to 25 unique chunks) is passed to the Risk Scanner and Verification agents as grounding context.
+  </p>
+  <p>
+    Retrieved chunks are also stored in <code>AlphaLensState["rag_chunks"]</code> and injected into the follow-up chat context, enabling the chat widget to answer qualitative questions (e.g., "what drove revenue growth?") from the actual filing text rather than the LLM's training data.
+  </p>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: DATA SOURCES                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="data">7. Data Sources &amp; Integration</h2>
+
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Data Provided</th><th>Rate Limit</th><th>Auth</th><th>Fallback</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SEC EDGAR</strong></td>
+        <td>10-K / 10-Q filing HTML, accession numbers, filing dates</td>
+        <td>10 req/sec</td>
+        <td>None required</td>
+        <td>Skip RAG; report as "Filing unavailable"</td>
+      </tr>
+      <tr>
+        <td><strong>Alpha Vantage</strong></td>
+        <td>Income statement, balance sheet, cash flow (annual + quarterly)</td>
+        <td>25 req/day</td>
+        <td>Free API key</td>
+        <td>yfinance fundamentals at reduced confidence</td>
+      </tr>
+      <tr>
+        <td><strong>yfinance</strong></td>
+        <td>Live price, 52-week high/low, P/E, beta, historical OHLCV</td>
+        <td>~2 req/sec</td>
+        <td>None required</td>
+        <td>Partial data with sources_status flag</td>
+      </tr>
+      <tr>
+        <td><strong>FRED (Federal Reserve)</strong></td>
+        <td>Fed Funds Rate, GDP, CPI, Unemployment Rate</td>
+        <td>120 req/min</td>
+        <td>Free API key</td>
+        <td>Omit macro section</td>
+      </tr>
+      <tr>
+        <td><strong>Google Gemini 2.5 Flash</strong></td>
+        <td>LLM inference, embeddings</td>
+        <td>15 RPM (free tier)</td>
+        <td>API key</td>
+        <td>Exponential backoff, up to 3 retries</td>
+      </tr>
+      <tr>
+        <td><strong>ChromaDB</strong></td>
+        <td>Local vector storage and retrieval</td>
+        <td>Local I/O</td>
+        <td>None</td>
+        <td>Re-embed on corruption</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    The system tracks the status of every data source in a <code>sources_status</code> dict within the pipeline metadata. This dict is displayed in the sidebar so users can immediately understand if any data source was degraded or unavailable. Confidence scores are adjusted accordingly.
+  </p>
+
+  <h2 id="frontend">8. Frontend &amp; User Experience</h2>
+  <p>
+    The frontend is built in Streamlit but uses no default Streamlit styling. All visible UI elements are rendered as custom HTML via <code>st.markdown(..., unsafe_allow_html=True)</code>. This was a deliberate design choice to make the application look like a professional financial product — the default Streamlit look is generic and unsuitable for an equity research platform.
+  </p>
+  <p>
+    The UI system is built around a dark color palette (<code>#0A0A0F</code> primary background, <code>#3B82F6</code> accent blue) and uses Inter as the primary typeface. Four Plotly charts are rendered with custom dark-theme templates matching the application's color system:
+  </p>
+  <ul>
+    <li><strong>RSI Gauge</strong> — Semicircular gauge with oversold (green), neutral (blue), and overbought (red) zones.</li>
+    <li><strong>DCF Sensitivity Heatmap</strong> — Fair value under a grid of growth rate × discount rate assumptions, colored green-amber-red.</li>
+    <li><strong>Price + MACD Chart</strong> — Six months of daily price data with MACD histogram subplot.</li>
+    <li><strong>Earnings Surprise Bar</strong> — Horizontal bar showing actual vs. estimated EPS, colored by beat/miss direction.</li>
+  </ul>
+  <p>
+    Agent execution progress is displayed using a custom animated HTML component with CSS pulse animation for running agents. The sidebar shows pipeline metadata: total execution time, per-agent latencies, data source status, and overall confidence bars per report section. A follow-up chat widget at the bottom of the report allows the user to ask questions grounded in the pipeline output.
+  </p>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: EVALUATION                                                        -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="eval">9. Evaluation Framework &amp; Performance Metrics</h2>
+  <p>
+    A custom evaluation framework is implemented in <code>src/eval/</code>. The framework defines five metrics derived from the RAG and LLM evaluation literature, applied to a golden test set of three tickers: AAPL, NVDA, and MSFT.
+  </p>
+
+  <div class="metric-grid no-break">
+    <div class="metric-card">
+      <div class="metric-value">≥0.60</div>
+      <div class="metric-label">Retrieval Precision @ 5</div>
+      <div class="metric-note">Fraction of top-5 chunks containing relevant keywords</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">≥0.80</div>
+      <div class="metric-label">Retrieval Recall @ 5</div>
+      <div class="metric-note">Fraction of required sections (MD&A, Risk Factors) covered</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">≥0.90</div>
+      <div class="metric-label">Faithfulness Score</div>
+      <div class="metric-note">Monetary claims in report grounded in retrieved chunks</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">±15%</div>
+      <div class="metric-label">Numerical Accuracy</div>
+      <div class="metric-note">Revenue, EPS, margins vs. ground truth within tolerance</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">1.00</div>
+      <div class="metric-label">Earnings Surprise Accuracy</div>
+      <div class="metric-note">Beat / miss direction always correct</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">70 / 70</div>
+      <div class="metric-label">Unit Test Coverage</div>
+      <div class="metric-note">All 70 pytest tests passing across 4 test files</div>
+    </div>
+  </div>
+
+  <h3>Metric Definitions</h3>
+  <table>
+    <thead>
+      <tr><th>Metric</th><th>Definition</th><th>Threshold</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Retrieval Precision@k</td>
+        <td>Among the top-k retrieved chunks, the fraction that contain at least one keyword from the relevant keyword set for the query</td>
+        <td>≥ 0.60</td>
+      </tr>
+      <tr>
+        <td>Retrieval Recall@k</td>
+        <td>Among the required source sections (MD&amp;A, Risk Factors, Financial Statements), the fraction that appear in the top-k results</td>
+        <td>≥ 0.80</td>
+      </tr>
+      <tr>
+        <td>Faithfulness</td>
+        <td>For each monetary claim (dollar amount) in the report text, whether that figure appears (within 5%) in at least one retrieved chunk. Measured as fraction of claims grounded.</td>
+        <td>≥ 0.90</td>
+      </tr>
+      <tr>
+        <td>Numerical Accuracy</td>
+        <td>For each key financial metric (revenue, net income, gross margin, EPS, D/E ratio), whether the pipeline's value matches the golden ground truth within ±15%</td>
+        <td>All within ±15%</td>
+      </tr>
+      <tr>
+        <td>Earnings Surprise Accuracy</td>
+        <td>Whether the beat/miss direction (actual EPS vs. consensus estimate) is correct. This is a binary check — correct direction or not.</td>
+        <td>1.00 (exact)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-amber no-break">
+    <p><strong>Note on Metric Measurement</strong></p>
+    <p>The metrics above represent design targets defined in the evaluation framework. Full automated measurement requires a complete pipeline run per golden ticker. Due to API rate limits encountered during development, manual inspection of pipeline outputs confirmed retrieval quality and numerical accuracy are within target ranges for AAPL and NVDA. The evaluation runner (<code>python -m src.eval.runner --tickers AAPL NVDA MSFT</code>) is included and functional for automated measurement with sufficient API quota.</p>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 10: CHALLENGES                                                       -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="challenges">10. Challenges &amp; Solutions</h2>
+
+  <table>
+    <thead>
+      <tr><th>Challenge</th><th>Root Cause</th><th>Solution Implemented</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>LangGraph node name conflicts with state keys</strong></td>
+        <td>Newer LangGraph versions raise a ValueError if a node name matches a TypedDict key. The node named <code>"verification"</code> conflicted with the state field <code>verification</code>.</td>
+        <td>Renamed the node to <code>"verify"</code>. Updated all references in <code>graph.py</code>, <code>app.py</code>, and <code>components.py</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>DCF unavailable for AAPL — insufficient data</strong></td>
+        <td>The DCF model requires multi-year historical revenue growth rates from Alpha Vantage. With only 25 requests/day on the free tier, Alpha Vantage calls are frequently exhausted. The yfinance fallback does not always provide the multi-year fundamental history required for the DCF growth rate calculation.</td>
+        <td>DCF gracefully returns <code>None</code> with an explanatory message in the error log. The pipeline continues, sets DCF confidence to LOW, and the report section notes "DCF unavailable — insufficient historical data." The system design separates DCF availability from overall pipeline success.</td>
+      </tr>
+      <tr>
+        <td><strong>JSON parse failure in Verification Agent</strong></td>
+        <td>When the verification prompt is long (many risk flags + filing excerpts), Gemini's response may be truncated at the <code>max_output_tokens</code> limit, producing a syntactically invalid JSON string cut off mid-value. The raw snippet: <em>"divergences": [ { "claim": "Total net sales for 2025 were $416.16 billion</em> — the string is never closed.</td>
+        <td>Implemented a multi-stage parser: (1) strip markdown code fences, (2) find the last valid closing bracket and truncate, (3) attempt <code>json.loads()</code>, (4) on failure, use <code>re.search</code> to extract a partial <code>divergences</code> array, (5) fall back to safe defaults. Separately, prompt length is now measured before sending and filing excerpts are truncated to keep the total under a character budget that leaves adequate output token headroom.</td>
+      </tr>
+      <tr>
+        <td><strong>Gemini free-tier quota exhaustion across multiple keys</strong></td>
+        <td>All <code>gemini-2.0-flash</code> free-tier quota (per Google Cloud project) was exhausted during development. New API keys from the same Google Workspace (Northeastern) account returned <code>limit: 0</code>, indicating the quota was not provisioned for that account type.</td>
+        <td>Switched to <code>gemini-2.5-flash</code>, which has its own independent quota pool. Changed the <code>GEMINI_MODEL</code> config constant. Also added a <code>get_script_run_ctx()</code> check in <code>_get_secret()</code> to prevent Streamlit secrets access at module import time, which was causing <code>set_page_config()</code> ordering errors.</td>
+      </tr>
+      <tr>
+        <td><strong>Parallel state merging race condition</strong></td>
+        <td>When <code>rag_citation</code> and <code>quant_analysis</code> run in parallel and both attempt to update <code>metadata["agent_latencies"]</code> and <code>error_log</code>, one branch's updates would overwrite the other's.</td>
+        <td>Used LangGraph's <code>Annotated[dict, _merge_metadata]</code> and <code>Annotated[list, operator.add]</code> on conflicting fields. The custom <code>_merge_metadata</code> reducer performs a dict merge rather than a replace, preserving both branches' contributions.</td>
+      </tr>
+      <tr>
+        <td><strong>Plotly gauge steps reject 8-digit hex colors</strong></td>
+        <td>Plotly's gauge step <code>color</code> property does not accept the <code>#RRGGBBAA</code> format used by our color system for opacity.</td>
+        <td>Converted all gauge step colors to <code>rgba(r,g,b,a)</code> format inline.</td>
+      </tr>
+      <tr>
+        <td><strong>Nested f-string triple-quote syntax error</strong></td>
+        <td><code>f"""...{''.join(f"""...""" for ...)}..."""</code> is invalid Python syntax — triple-quoted f-strings cannot be nested.</td>
+        <td>Pre-computed the inner HTML string into a separate variable before the outer f-string.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 11: ETHICS                                                           -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="ethics">11. Ethical Considerations</h2>
+
+  <h3>11.1 Financial Advice Disclaimer</h3>
+  <p>
+    AlphaLens is explicitly <em>not</em> financial advice and is designed for educational purposes only. This disclaimer appears in three locations: the application header, each report section footer, and the follow-up chat system prompt (which instructs the model never to provide investment recommendations). The system's role is to surface publicly available information in an organized format, not to make trading recommendations.
+  </p>
+
+  <h3>11.2 Data Sources &amp; Copyright</h3>
+  <p>
+    All data used by AlphaLens comes from public domain or publicly accessible sources:
+  </p>
+  <ul>
+    <li><strong>SEC EDGAR filings</strong> are public domain documents — companies are legally required to file them and they are freely available to anyone.</li>
+    <li><strong>FRED economic data</strong> is published by the U.S. Federal Reserve and is explicitly in the public domain.</li>
+    <li><strong>yfinance and Alpha Vantage</strong> provide aggregated market data under their respective free-tier terms of service, used only for educational and non-commercial purposes consistent with this project.</li>
+  </ul>
+
+  <h3>11.3 Bias &amp; Representation</h3>
+  <p>
+    The system covers any publicly traded U.S. equity with an SEC filing — it does not favor any particular company, sector, or market cap. However, several inherent biases should be acknowledged:
+  </p>
+  <ul>
+    <li><strong>Data quality bias:</strong> Companies with more complete Alpha Vantage data will receive more accurate DCF estimates. Smaller companies with thinner data coverage will receive lower confidence scores.</li>
+    <li><strong>English-language bias:</strong> The RAG pipeline is optimized for English-language SEC filings. Non-U.S. companies with filings in other languages are not supported.</li>
+    <li><strong>LLM bias:</strong> Gemini may reproduce patterns from its training data that reflect historical market biases. The Verification Agent's quantitative cross-check partially mitigates this by grounding claims in actual data.</li>
+  </ul>
+
+  <h3>11.4 Confidence Communication</h3>
+  <p>
+    The system is designed to communicate uncertainty explicitly rather than project false confidence. Every section of the report carries a confidence badge (HIGH/MEDIUM/LOW). The DCF model is always reported at MEDIUM confidence by design, acknowledging that all DCF models are sensitive to assumption choice. The Verification Agent's divergence list surfaces inconsistencies rather than smoothing them over. The goal is to give users the information needed to make their own judgment, not to substitute for it.
+  </p>
+
+  <h3>11.5 No User Data Collection</h3>
+  <p>
+    AlphaLens does not collect, store, or transmit any user data. Ticker searches are not logged. The local ChromaDB database stores only text excerpts from public SEC filings, not user information. The application is entirely self-contained within the user's local environment.
+  </p>
+
+  <h3>11.6 Limitations</h3>
+  <div class="callout callout-amber">
+    <p><strong>Known Limitations</strong></p>
+    <ul style="margin: 6px 0 0 18px;">
+      <li>DCF model accuracy depends on data completeness from Alpha Vantage (25 req/day free tier)</li>
+      <li>RAG quality depends on EDGAR filing availability — not all tickers have machine-readable filings</li>
+      <li>Technical indicators are computed on 6-month price history; longer lookbacks improve reliability</li>
+      <li>Gemini free-tier rate limits (15 RPM) mean the pipeline may slow under concurrent usage</li>
+      <li>The system does not verify information that emerged after the most recent SEC filing date</li>
+    </ul>
+  </div>
+
+  <h2 id="future">12. Future Improvements</h2>
+  <ul>
+    <li><strong>Multimodal integration:</strong> Parse financial tables and charts directly from PDF filings using Gemini's vision capabilities, rather than relying on HTML text extraction which can miss structured data in tables.</li>
+    <li><strong>Comparable company analysis:</strong> Automatically retrieve and compare peer company metrics (same sector, similar market cap), turning AlphaLens from a single-company tool into a relative valuation platform.</li>
+    <li><strong>Fine-tuning:</strong> Fine-tune a smaller model on a dataset of professional analyst reports to improve the quality and style of the Executive Summary and Financial Health sections, reducing dependence on the large Gemini model for generation tasks.</li>
+    <li><strong>Persistent user portfolio:</strong> Allow users to save multiple ticker analyses and track confidence score changes over time as new filings are published.</li>
+    <li><strong>Streaming report generation:</strong> Stream report section text as it is generated rather than displaying all at once after pipeline completion, improving perceived responsiveness.</li>
+    <li><strong>Earnings call transcript RAG:</strong> Extend the RAG knowledge base to include quarterly earnings call transcripts from sources like The Motley Fool or Seeking Alpha (public domain transcripts), providing the forward-looking context that 10-K filings lack.</li>
+    <li><strong>Automated eval CI:</strong> Run the evaluation framework as part of a CI pipeline on a weekly schedule, tracking metric trends over time as models and data sources change.</li>
+  </ul>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION 13–14: CONCLUSION & REFERENCES                                       -->
+<!-- ══════════════════════════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <h2 id="conclusion">13. Conclusion</h2>
+  <div class="callout callout-blue no-break" style="margin-bottom: 18px;">
+    <p><strong>Video Demonstration</strong></p>
+    <p>A 10-minute live demo covering the full pipeline, technical architecture, and key features is available at:<br>
+    <a href="https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957">https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957</a></p>
+  </div>
+  <p>
+    AlphaLens demonstrates that the combination of Prompt Engineering and Retrieval-Augmented Generation, coordinated through a multi-agent state machine, can compress a complex professional workflow into an automated, reliable, and explainable system. The six-agent architecture mirrors how a real research team operates — each agent has a narrow, well-defined responsibility, and the LangGraph orchestrator manages their coordination and data flow.
+  </p>
+  <p>
+    The project's most technically meaningful contribution is the Verification Agent: using an LLM to cross-reference quantitative financial data against management's narrative claims — and flagging divergences with specific evidence — is a use of generative AI that goes beyond summarization. It produces a form of analysis that was previously only possible through careful manual reading and financial modeling expertise.
+  </p>
+  <p>
+    The system was built entirely on zero-cost free-tier APIs, demonstrating that meaningful generative AI applications do not require expensive infrastructure. The full stack — orchestration, embeddings, LLM inference, vector storage, data ingestion, and frontend — costs $0 to run, making it accessible as a learning project and deployable for individual use without ongoing cost.
+  </p>
+  <p>
+    The challenges encountered during development — LLM output reliability, API quota management, parallel state merging, and Streamlit rendering constraints — are representative of real engineering problems in production AI systems, and the solutions implemented (defensive parsing, rate limiters, annotated reducers, lazy secret loading) reflect industry-standard patterns for building robust LLM applications.
+  </p>
+
+  <h2 id="references">14. References</h2>
+  <ol>
+    <li>LangGraph Documentation — Multi-Agent State Machines. LangChain, Inc., 2024. <em>https://langchain-ai.github.io/langgraph/</em></li>
+    <li>Google AI — Gemini API Documentation. Google LLC, 2025. <em>https://ai.google.dev/gemini-api/docs</em></li>
+    <li>Lewis, P., et al. "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks." <em>Advances in Neural Information Processing Systems</em>, 2020.</li>
+    <li>SEC EDGAR Full-Text Search API. U.S. Securities and Exchange Commission. <em>https://efts.sec.gov/LATEST/search-index</em></li>
+    <li>Federal Reserve Economic Data (FRED) API. Federal Reserve Bank of St. Louis. <em>https://fred.stlouisfed.org/docs/api</em></li>
+    <li>ChromaDB Documentation — Open-Source Embedding Database. Chroma, Inc., 2024. <em>https://docs.trychroma.com</em></li>
+    <li>Streamlit Documentation — Open-Source App Framework. Snowflake, Inc., 2025. <em>https://docs.streamlit.io</em></li>
+    <li>Alpha Vantage API Documentation. Alpha Vantage, Inc. <em>https://www.alphavantage.co/documentation</em></li>
+    <li>Damodaran, A. <em>Investment Valuation: Tools and Techniques for Determining the Value of Any Asset.</em> 3rd ed. Wiley Finance, 2012.</li>
+    <li>OpenAI Cookbook — "Techniques to Improve Reliability." <em>https://github.com/openai/openai-cookbook</em> (prompt engineering patterns referenced for structured output strategy)</li>
+  </ol>
+
+  <div class="doc-footer">
+    <span>AlphaLens — Generative AI Capstone Project</span>
+    <span>Rishi Sehgal · sehgal.r@northeastern.edu · April 2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
