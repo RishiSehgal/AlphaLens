@@ -1,14 +1,28 @@
+# Secrets & environment
 .env
-__pycache__/
+.streamlit/secrets.toml
+
+# Runtime data
 .chroma/
+.alphalens_cache.json
+.alphalens_costs.json
+
+# Python
+__pycache__/
 *.pyc
 *.pyo
-.streamlit/secrets.toml
-node_modules/
+*.pyd
 *.egg-info/
 dist/
 build/
 .venv/
 venv/
-*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# System & tooling
 .DS_Store
+.claude/
+node_modules/
+*.log
