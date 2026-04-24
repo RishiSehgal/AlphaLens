@@ -3,10 +3,7 @@
 import logging
 from typing import Any
 
-try:
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
-except ImportError:
-    from langchain.text_splitter import RecursiveCharacterTextSplitter  # type: ignore[no-redef]
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from src.config import CHUNK_OVERLAP, CHUNK_SIZE
 
