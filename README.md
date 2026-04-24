@@ -6,7 +6,7 @@ AlphaLens compresses 8+ hours of professional equity research into ~90 seconds u
 
 Built as a Northeastern MS Generative AI capstone. Demonstrates RAG, prompt engineering, multi-agent orchestration, multimodal data fusion, and evaluation metrics.
 
-**[▶ Watch the 10-Minute Demo on Loom](https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957)**
+**[🌐 Web Page](https://rishisehgal.github.io/AlphaLens/)** · **[▶ Watch the 10-Minute Demo on Loom](https://www.loom.com/share/36213fda55af4fd2829f19d726ef1957)**
 
 ---
 
@@ -75,7 +75,7 @@ flowchart LR
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/alphalens.git
+git clone https://github.com/RishiSehgal/AlphaLens.git
 cd alphalens
 
 python -m venv .venv
